@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class UserserviceImpl {
+public class UserServiceImpl {
     private final UserService userService;
 }

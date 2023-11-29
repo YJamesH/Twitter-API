@@ -2,10 +2,12 @@ package com.cooksys.socialmedia.services.impl;
 
 import com.cooksys.socialmedia.services.UserService;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class UserServiceImpl {
-    private final UserService userService;
+@Data
+public class UserServiceImpl implements UserService {
 }

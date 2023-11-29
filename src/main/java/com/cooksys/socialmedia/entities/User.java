@@ -26,7 +26,7 @@ public class User {
 
     private String passWord;
 
-    @Column(nullable = false,updatable = false)
+   // @Column(nullable = false,updatable = false)
     private Timestamp joined;
 
     private boolean deleted;

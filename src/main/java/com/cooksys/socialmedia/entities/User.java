@@ -1,11 +1,19 @@
 package com.cooksys.socialmedia.entities;
 
-import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.sql.Timestamp;
 import java.util.List;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 //The username must be unique.
 //The joined timestamp should be assigned when the user is first created, and must never be updated.
@@ -43,6 +51,20 @@ public class User {
     public User(Timestamp joined) {
         this.joined = joined;
     }
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    List<Tweet> tweets;
+
+    
+    @ManyToMany
+	@JoinTable(name="user_likes",
+	joinColumns ={@JoinColumn(name ="user_Id")},
+	inverseJoinColumns ={@JoinColumn(name="tweet_id")})
+    private List<Tweet> tweets;
+    
+    @ManyToMany(mappedBy="mentionedUsers")
+    private List<Tweet> mentionedTweets;
+    
+    @Embedded
+    private Profile profile;
+    
+    @Embedded
+    private Credentials credentials;
 }

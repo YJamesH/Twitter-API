@@ -1,10 +1,18 @@
 package com.cooksys.socialmedia.entities;
 
-import jakarta.persistence.*;
+import java.sql.Timestamp;
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 //A tweet posted by a user.
 
@@ -16,7 +24,8 @@ public class Tweet {
     @GeneratedValue
     private Long id;
 
-    private Integer author;// need to clarify datatype
+    @JoinColumn
+    private User author;// need to clarify datatype
 
     private Timestamp posted;
 
@@ -24,9 +33,23 @@ public class Tweet {
 
     private String content;
 
-    private Long inReplyTo;// need to clarify datatype
+    @ManyToMany
+    private List<User> mentionedUsers;
 
-    private Long repostOf;// need to clarify datatype
+    @ManyToMany
+	@JoinTable(name="user_likes",
+	joinColumns ={@JoinColumn(name ="tweet_id")},
+	inverseJoinColumns ={@JoinColumn(name="user_id")})
+    private List<User> users;
+    
+    
+    private List<Tweet> inReplyTo;// need to clarify datatype
+
+    @ManyToOne
+    private Tweet repostOfOriginal;// need to clarify datatype
+    
+    @OneToMany(mappedBy="repostOfOriginal")
+    private List<Tweet> repostOfList;
 
     @ManyToOne
     @JoinColumn (name = "user_id")

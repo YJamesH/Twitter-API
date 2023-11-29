@@ -2,16 +2,19 @@ package com.cooksys.socialmedia.dtos;
 
 import java.sql.Timestamp;
 
-public class TweetResponseDto {
-    private Long id;
+import com.cooksys.socialmedia.entities.Tweet;
+import com.cooksys.socialmedia.entities.User;
 
-    private Integer author;// need to clarify datatype
+public class TweetResponseDto {
+    private Integer id;
+
+    private User author;// need to clarify datatype
 
     private Timestamp posted;
 
     private String content;
 
-    private Long inReplyTo;// need to clarify datatype
+    private Tweet inReplyTo;// need to clarify datatype
 
-    private Long repostOf;// need to clarify datatype
+    private Tweet repostOf;// need to clarify datatype
 }

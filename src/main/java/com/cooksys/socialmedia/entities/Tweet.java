@@ -43,7 +43,7 @@ public class Tweet {
     private List<User> users;
     
     
-    private List<Tweet> inReplyTo;// need to clarify datatype
+    private Tweet inReplyTo;// need to clarify datatype
 
     @ManyToOne
     private Tweet repostOfOriginal;// need to clarify datatype
@@ -54,6 +54,9 @@ public class Tweet {
     @ManyToOne
     @JoinColumn (name = "user_id")
     private User user;
+    
+    private List<Hashtag> hashtags;
+
 
 
 }

@@ -30,9 +30,9 @@ public class User {
 
 
     @Column(unique = true)
-    private String userName;
+    private String username;
 
-    private String passWord;
+    private String password;
 
     @Column(nullable = false,updatable = false)
     private Timestamp joined;
@@ -58,6 +58,12 @@ public class User {
 	joinColumns ={@JoinColumn(name ="user_Id")},
 	inverseJoinColumns ={@JoinColumn(name="tweet_id")})
     private List<Tweet> tweets;
+    
+    private List<Tweet> userLikes;
+    
+    private List<User> following;
+    
+    private List<User> followers;
     
     @ManyToMany(mappedBy="mentionedUsers")
     private List<Tweet> mentionedTweets;

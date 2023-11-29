@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class Credentials {
 	@Column(nullable=false)
-	private String userName;
+	private String username;
 	
 	@Column(nullable=false)
 	private String password;

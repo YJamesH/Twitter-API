@@ -38,10 +38,11 @@ public class Tweet {
     @ManyToMany
     private List<User> mentionedUsers;
 
+    // Users who have liked the tweet
     @ManyToMany
     private List<User> users;
     
-    @OneToOne
+    @ManyToOne
     @JoinColumn
     private Tweet inReplyTo;
 
@@ -49,10 +50,10 @@ public class Tweet {
     @JoinColumn
     private Tweet repostOfOriginal;
     
-    @OneToMany(mappedBy="repostOfOriginal")
-    private List<Tweet> repostOfList;
+    //@OneToMany(mappedBy="repostOfOriginal")
+    //private List<Tweet> repostOfList;
 
-    
+    @ManyToMany
     private List<Hashtag> hashtags;
 
 

@@ -3,13 +3,13 @@ package com.cooksys.socialmedia.entities;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -25,32 +25,15 @@ import lombok.NoArgsConstructor;
 @Entity
 
 public class User {
+	
     @Id
     @GeneratedValue
     private Long id;
-
-    @Column(unique = true)
-    private String username;
-
-    private String password;
-
-    @Column(nullable = false,updatable = false)
+    
+    @Column(/*nullable = false,*/updatable = false)
     private Timestamp joined;
 
     private boolean deleted;
-
-    private String firstName;
-
-    private String lastName;
-
-    @Column(nullable = false)
-    private String email;
-
-    private String phone;
-
-    public User(Timestamp joined) {
-        this.joined = joined;
-    }
 
     @OneToMany(mappedBy = "author")
     private List<Tweet> tweets;
@@ -67,9 +50,20 @@ public class User {
     @ManyToMany(mappedBy="mentionedUsers")
     private List<Tweet> mentionedTweets;
     
+
     @Embedded
+    @AttributeOverrides({
+    	@AttributeOverride(name="firstName", column=@Column(name = "user_firstName")),
+    	@AttributeOverride(name="lastName", column=@Column(name = "user_lastName")),
+    	@AttributeOverride(name="email", column=@Column(name = "user_email")),
+    	@AttributeOverride(name="phone", column=@Column(name = "user_phone"))
+    })
     private Profile profile;
     
     @Embedded
     private Credentials credentials;
+    
+    public User(Timestamp joined) {
+        this.joined = joined;
+    }
 }

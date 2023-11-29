@@ -1,13 +1,15 @@
 package com.cooksys.socialmedia.entities;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
 
 //The label property must be unique, but is case-insensitive.
 //The firstUsed timestamp should be assigned on creation, and must never be updated.
@@ -35,4 +37,7 @@ public class Hashtag {
     public Hashtag(Timestamp firstUsed) {
         this.firstUsed = firstUsed;
     }
+    
+    @ManyToMany(mappedBy="hashtags")
+    private List<Tweet> tweets;
 }

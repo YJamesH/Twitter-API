@@ -11,6 +11,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,8 +25,9 @@ public class Tweet {
     @GeneratedValue
     private Long id;
 
+    @ManyToOne
     @JoinColumn
-    private User author;// need to clarify datatype
+    private User author;
 
     private Timestamp posted;
 
@@ -37,23 +39,19 @@ public class Tweet {
     private List<User> mentionedUsers;
 
     @ManyToMany
-	@JoinTable(name="user_likes",
-	joinColumns ={@JoinColumn(name ="tweet_id")},
-	inverseJoinColumns ={@JoinColumn(name="user_id")})
     private List<User> users;
     
-    
-    private Tweet inReplyTo;// need to clarify datatype
+    @OneToOne
+    @JoinColumn
+    private Tweet inReplyTo;
 
     @ManyToOne
-    private Tweet repostOfOriginal;// need to clarify datatype
+    @JoinColumn
+    private Tweet repostOfOriginal;
     
     @OneToMany(mappedBy="repostOfOriginal")
     private List<Tweet> repostOfList;
 
-    @ManyToOne
-    @JoinColumn (name = "user_id")
-    private User user;
     
     private List<Hashtag> hashtags;
 

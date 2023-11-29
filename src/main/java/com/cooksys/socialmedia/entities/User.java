@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,6 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-
 
     @Column(unique = true)
     private String username;
@@ -52,17 +52,16 @@ public class User {
         this.joined = joined;
     }
 
-    
-    @ManyToMany
-	@JoinTable(name="user_likes",
-	joinColumns ={@JoinColumn(name ="user_Id")},
-	inverseJoinColumns ={@JoinColumn(name="tweet_id")})
+    @OneToMany(mappedBy = "author")
     private List<Tweet> tweets;
-    
+
+    @ManyToMany(mappedBy="users")
     private List<Tweet> userLikes;
     
+    @ManyToMany(mappedBy="followers")
     private List<User> following;
     
+    @ManyToMany
     private List<User> followers;
     
     @ManyToMany(mappedBy="mentionedUsers")

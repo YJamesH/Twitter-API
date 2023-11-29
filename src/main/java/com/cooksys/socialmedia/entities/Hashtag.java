@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Data
 @Entity
-public class HashTag {
+public class Hashtag {
     @Id
     @GeneratedValue
     private Long id;
@@ -32,7 +32,7 @@ public class HashTag {
 
     private Timestamp lastUsed;
 
-    public HashTag(Timestamp firstUsed) {
+    public Hashtag(Timestamp firstUsed) {
         this.firstUsed = firstUsed;
     }
 }

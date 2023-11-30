@@ -3,6 +3,9 @@ package com.cooksys.socialmedia.entities;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,17 +29,13 @@ public class Hashtag {
     @Column(unique = true)
     private String label;
 
-    // should not have setter ?
-    // @Column(updatable = false) enough ?
-    // need to clarify
-    @Column(updatable = false)
+    @Column(nullable = false)
+    @CreationTimestamp
     private Timestamp firstUsed;
 
+    @Column(nullable = false)
+    @UpdateTimestamp
     private Timestamp lastUsed;
-
-    public Hashtag(Timestamp firstUsed) {
-        this.firstUsed = firstUsed;
-    }
     
     @ManyToMany(mappedBy="hashtags")
     private List<Tweet> tweets;

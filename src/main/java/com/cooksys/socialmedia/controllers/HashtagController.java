@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping()
+@RequestMapping("/tags")
 public class HashtagController {
 
 }

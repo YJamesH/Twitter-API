@@ -6,8 +6,9 @@ import lombok.Data;
 
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
+import lombok.RequiredArgsConstructor;
+
 @Service
-@Data
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 }

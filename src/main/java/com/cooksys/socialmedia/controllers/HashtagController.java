@@ -1,6 +1,13 @@
 package com.cooksys.socialmedia.controllers;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.cooksys.socialmedia.dtos.HashtagResponseDto;
+import com.cooksys.socialmedia.services.HashtagService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -9,4 +16,10 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/tags")
 public class HashtagController {
 
+	private final HashtagService hashtagService;
+	
+	@GetMapping
+	public List<HashtagResponseDto> getAllTags() {
+		return hashtagService.getAllTags();
+	}
 }

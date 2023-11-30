@@ -2,7 +2,6 @@ package com.cooksys.socialmedia.dtos;
 
 import java.util.List;
 
-import com.cooksys.socialmedia.entities.Tweet;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -3,6 +3,8 @@ package com.cooksys.socialmedia.entities;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
@@ -10,6 +12,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -23,7 +26,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-
 public class User {
 	
     @Id
@@ -40,17 +42,19 @@ public class User {
     @OneToMany(mappedBy = "author")
     private List<Tweet> tweets;
 
-    @ManyToMany(mappedBy="usersLikes")
+    @ManyToMany(mappedBy="userLikes")
     private List<Tweet> tweetLikes;
     
     @ManyToMany(mappedBy="followers")
     private List<User> following;
     
     @ManyToMany
+    @JoinTable(name="followers_following")
     private List<User> followers;
     
-    @ManyToMany(mappedBy="mentionedUsers")
-    private List<Tweet> mentionedTweets;
+    @ManyToMany
+    @JoinTable(name="user_mentions")
+    private List<Tweet> tweetMentions;
     
 
     @Embedded
@@ -68,4 +72,5 @@ public class User {
     public User(Timestamp joined) {
         this.joined = joined;
     }
+
 }

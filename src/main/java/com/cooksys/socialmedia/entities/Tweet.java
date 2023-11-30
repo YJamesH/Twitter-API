@@ -21,14 +21,15 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 public class Tweet {
+    
     @Id
     @GeneratedValue
     private Long id;
 
     @ManyToOne
-    @JoinColumn
     private User author;
 
+    @CreationTimestamp
     private Timestamp posted;
 
     private boolean deleted;
@@ -40,18 +41,20 @@ public class Tweet {
 
     // Users who have liked the tweet
     @ManyToMany
-    private List<User> users;
+    private List<User> userLikes;
     
     @ManyToOne
-    @JoinColumn
     private Tweet inReplyTo;
+
+    @OneToMany(mappedBy = "inReplyTo")
+    private List<Tweet> replies = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn
     private Tweet repostOfOriginal;
     
-    //@OneToMany(mappedBy="repostOfOriginal")
-    //private List<Tweet> repostOfList;
+    @OneToMany(mappedBy = "repostOfOriginal")
+    private List<Tweet> reposts = new ArrayList<>();
 
     @ManyToMany
     private List<Hashtag> hashtags;

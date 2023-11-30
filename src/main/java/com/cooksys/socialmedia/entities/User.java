@@ -30,7 +30,9 @@ public class User {
     @GeneratedValue
     private Long id;
     
-    @Column(/*nullable = false,*/updatable = false)
+    
+	@Column(nullable = false)
+	@CreationTimestamp
     private Timestamp joined;
 
     private boolean deleted;
@@ -38,8 +40,8 @@ public class User {
     @OneToMany(mappedBy = "author")
     private List<Tweet> tweets;
 
-    @ManyToMany(mappedBy="users")
-    private List<Tweet> userLikes;
+    @ManyToMany(mappedBy="usersLikes")
+    private List<Tweet> tweetLikes;
     
     @ManyToMany(mappedBy="followers")
     private List<User> following;

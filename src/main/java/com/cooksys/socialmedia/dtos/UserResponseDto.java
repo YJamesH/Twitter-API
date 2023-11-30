@@ -1,8 +1,7 @@
 package com.cooksys.socialmedia.dtos;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
-import com.cooksys.socialmedia.entities.Profile;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

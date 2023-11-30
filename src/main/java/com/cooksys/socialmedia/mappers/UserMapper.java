@@ -2,6 +2,10 @@ package com.cooksys.socialmedia.mappers;
 
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.entities.User;
 
 @Mapper(componentModel = "spring", uses = { ProfileMapper.class, CredentialsMapper.class })
 public interface UserMapper {

@@ -26,7 +26,7 @@ public class Tweet {
     private Long id;
 
     @ManyToOne
-    @JoinColumn
+    //@JoinColumn
     private User author;
 
     private Timestamp posted;
@@ -35,27 +35,36 @@ public class Tweet {
 
     private String content;
 
+            //  ( user_mentiones ) table  (mentionedUsers for the tweet)
+
     @ManyToMany
+    @JoinTable(
+            name = "user_mentiones",
+            joinColumns = @JoinColumn(name = "tweet_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> mentionedUsers;
 
-    // Users who have liked the tweet
-    @ManyToMany
+                // Users who have liked the tweet
+
+    @ManyToMany(mappedBy = "likes")
     private List<User> users;
-    
+
+                // Tweet  - (Tweet) inReplyTo;
     @ManyToOne
-    @JoinColumn
+    //@JoinColumn
     private Tweet inReplyTo;
 
+            // Tweet - (Tweet) repostOfOriginal
     @ManyToOne
-    @JoinColumn
+    //@JoinColumn
     private Tweet repostOfOriginal;
     
-    //@OneToMany(mappedBy="repostOfOriginal")
-    //private List<Tweet> repostOfList;
+    //@OneToMany(mappedBy="repostOfOriginal") // not reequired
+    //private List<Tweet> repostOfList;// not required
 
+                // (tweet - hashtag) join table
     @ManyToMany
     private List<Hashtag> hashtags;
-
-
 
 }

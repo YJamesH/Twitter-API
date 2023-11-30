@@ -3,16 +3,7 @@ package com.cooksys.socialmedia.entities;
 import java.sql.Timestamp;
 import java.util.List;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,19 +25,33 @@ public class User {
     private Timestamp joined;
 
     private boolean deleted;
-
+            //**** user - Tweeter mapping
     @OneToMany(mappedBy = "author")
     private List<Tweet> tweets;
 
-    @ManyToMany(mappedBy="users")
-    private List<Tweet> userLikes;
-    
+            //*****user_likes
+    @ManyToMany//(mappedBy="users")
+    @JoinTable(
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "tweet_id")
+    )
+    private List<Tweet> likes;
+
+            //******* followers following join table
     @ManyToMany(mappedBy="followers")
     private List<User> following;
     
     @ManyToMany
+    @JoinTable(
+            name = "followers_following",
+            joinColumns = @JoinColumn(name = "followers_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
     private List<User> followers;
-    
+
+        // **** ( user_mentiones ) table  (mentionedUsers for the tweet)
+
     @ManyToMany(mappedBy="mentionedUsers")
     private List<Tweet> mentionedTweets;
     

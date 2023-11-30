@@ -12,6 +12,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -48,10 +49,12 @@ public class User {
     private List<User> following;
     
     @ManyToMany
+    @JoinTable(name="followers_following")
     private List<User> followers;
     
-    @ManyToMany(mappedBy="mentionedUsers")
-    private List<Tweet> mentionedTweets;
+    @ManyToMany
+    @JoinTable(name="user_mentions")
+    private List<Tweet> tweetMentions;
     
 
     @Embedded

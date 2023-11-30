@@ -77,5 +77,8 @@ public class UserServiceImpl implements UserService {
 		
 		myUser.setFollowing(myUserCurrFollowing);
 		userToFollow.setFollowers(userToFollowCurrFollowers);
+		
+		userRepository.saveAndFlush(myUser);
+		userRepository.saveAndFlush(userToFollow);
 	}
 }

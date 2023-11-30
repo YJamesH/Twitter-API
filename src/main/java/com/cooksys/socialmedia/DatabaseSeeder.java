@@ -167,7 +167,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         tweet1.setDeleted(false);
         tweet1.setContent("This is some content 1 tweet1 #eldenlord #mario");
         tweet1.setHashtags(Arrays.asList(hashtag1, hashtag2));
-        tweet1.setMentionedUsers(Arrays.asList(user1, user2));
+        tweet1.setUserMentions(Arrays.asList(user1, user2));
         tweetRepository.saveAndFlush(tweet1);
 
         // --- Start Tweet 2 ---
@@ -204,7 +204,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         tweet5.setDeleted(false);
         // Set Content @PARAM String
         tweet5.setContent("This is some content 5 tweet5");
-        tweet5.setMentionedUsers(Arrays.asList(user1, user2));
+        tweet5.setUserMentions(Arrays.asList(user1, user2));
         tweet5.setInReplyTo(tweet4);
         tweetRepository.saveAndFlush(tweet5);
 
@@ -213,8 +213,8 @@ public class DatabaseSeeder implements CommandLineRunner {
         tweet6.setAuthor(user3);
         tweet6.setDeleted(false);
         // Set Content @PARAM String
-        tweet6.setRepostOfOriginal(tweet5);
-        tweet6.setMentionedUsers(Arrays.asList(user1, user2));
+        tweet6.setRepostOf(tweet5);
+        tweet6.setUserMentions(Arrays.asList(user1, user2));
         tweet6.setInReplyTo(tweet2);
         tweetRepository.saveAndFlush(tweet6);
 
@@ -224,7 +224,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         deletedTweet.setDeleted(true);
         // Set Content @PARAM String
         deletedTweet.setContent("This is a deleted tweet (User3) tweet7");
-        deletedTweet.setMentionedUsers(Arrays.asList(user1, user2));
+        deletedTweet.setUserMentions(Arrays.asList(user1, user2));
         tweetRepository.saveAndFlush(deletedTweet);
 
         // ----- LIST of Tweets + Adding to User# -----

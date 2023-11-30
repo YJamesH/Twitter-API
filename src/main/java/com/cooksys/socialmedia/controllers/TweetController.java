@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/tweet")
+@RequestMapping("/tweets")
 public class TweetController {
 
 }

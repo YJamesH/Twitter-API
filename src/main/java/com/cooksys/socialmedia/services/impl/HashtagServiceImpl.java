@@ -4,9 +4,10 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@AllArgsConstructor
+import lombok.RequiredArgsConstructor;
+
 @Service
-@Data
-public class HashtagServiceImpl {
+@RequiredArgsConstructor
+public class HashtagServiceImpl implements HashtagService {
 
 }

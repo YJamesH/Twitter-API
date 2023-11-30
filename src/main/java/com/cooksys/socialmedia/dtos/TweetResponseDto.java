@@ -4,17 +4,21 @@ import java.sql.Timestamp;
 
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.entities.User;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@Data
 public class TweetResponseDto {
-    private Integer id;
+    private Long id;
 
-    private User author;// need to clarify datatype
+    private UserResponseDto author;// need to clarify datatype
 
     private Timestamp posted;
 
     private String content;
 
-    private Tweet inReplyTo;// need to clarify datatype
+    private TweetResponseDto inReplyTo;// need to clarify datatype
 
-    private Tweet repostOf;// need to clarify datatype
+    private TweetResponseDto repostOf;// need to clarify datatype
 }

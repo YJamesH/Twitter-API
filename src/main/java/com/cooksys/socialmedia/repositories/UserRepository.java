@@ -1,11 +1,17 @@
 package com.cooksys.socialmedia.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.entities.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
-    // we can have derived qureis if required
+    
+	Optional<User> findByCredentialsUsername(String username);
+
+//	User dtoToEntity(UserRequestDto userRequestDto);
 }

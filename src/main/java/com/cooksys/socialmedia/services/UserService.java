@@ -4,10 +4,30 @@ import java.util.List;
 
 import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
+import com.cooksys.socialmedia.dtos.UserRequestDto;
+import com.cooksys.socialmedia.dtos.UserResponseDto;
 
 public interface UserService {
 	
-	List<TweetResponseDto> getMentions(String username);
+	List<UserResponseDto> getAllUsers();
+	
+	UserResponseDto getUser(String username);
 
-	void follow(CredentialsRequestDto credentialsRequestDto, String username);
+	List<TweetResponseDto> getTweets(String username);
+
+	List<UserResponseDto> getFollowing(String username);
+
+	void unfollowUser(String username, CredentialsRequestDto credentialsRequestDto);
+
+	UserResponseDto deleteUser(String username, UserRequestDto userRequestDto);
+
+	
+//	List<TweetResponseDto> getMentions(String username);
+
+//	void follow(CredentialsRequestDto credentialsRequestDto, String username);
+
+
+
+
+
 }

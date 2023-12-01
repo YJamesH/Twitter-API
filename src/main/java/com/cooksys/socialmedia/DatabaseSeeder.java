@@ -241,7 +241,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         userRepository.saveAndFlush(user3);
 
         // ----- List of Liked Tweets -----
-        user1.setTweetLikes(user3Tweets);
+        user1.setTweetLikes(user3.getTweets());
         userRepository.saveAndFlush(user1);
 
         user2.setTweetLikes(user1Tweets);

@@ -56,8 +56,8 @@ public class UserController {
 
 	@DeleteMapping("/@{username}")
 	public UserResponseDto deleteCustomer(@PathVariable(value = "username") String username,
-			@RequestBody UserRequestDto userRequestDto) {
-		return userService.deleteUser(username, userRequestDto);
+			@RequestBody CredentialsRequestDto credentialsRequestDto) {
+		return userService.deleteUser(username, credentialsRequestDto);
 	}
 
 	// devon's implement

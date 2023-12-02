@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.entities.Credentials;
 import com.cooksys.socialmedia.entities.Tweet;
@@ -33,7 +33,13 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public List<UserResponseDto> getAllUsers() {
-		return userMapper.entitiesToUserDtos(userRepository.findAll());
+		List<User> usersNotDeleted = new ArrayList<>();
+		for (User user : userRepository.findAll()) {
+			if(!user.isDeleted()) {
+				usersNotDeleted.add(user);
+			}
+		}
+		return userMapper.entitiesToUserDtos(usersNotDeleted);
 	}
 	
 	@Override
@@ -85,8 +91,8 @@ public class UserServiceImpl implements UserService {
 	
 	
 	@Override
-	public UserResponseDto deleteUser(String username, UserRequestDto userRequestDto) {
-		User user = getUserAndCheckCredentials(username, userRequestDto);
+	public UserResponseDto deleteUser(String username, CredentialsRequestDto credentialsRequestDto) {
+		User user = getUserAndCheckCredentials(username, credentialsRequestDto);
 		user.setDeleted(true);
 		userRepository.saveAndFlush(user);
 		return userMapper.entityToDto(user);
@@ -154,11 +160,6 @@ public class UserServiceImpl implements UserService {
 //	}
 //
 
-
-	
-
-
-	
 	private User getUserWithUsername(String username) {
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
 		if (optionalUser.isEmpty()) {
@@ -166,18 +167,19 @@ public class UserServiceImpl implements UserService {
 		}
 		User user = optionalUser.get();
 		if (user.isDeleted()) {
+//			System.out.println("DELETED USER");
 //			throw new BadRequestException("User deleted");
 		}
 		return user;
 	}
 
-	private User getUserAndCheckCredentials(String username, UserRequestDto userRequestDto) {
+	private User getUserAndCheckCredentials(String username, CredentialsRequestDto credentialsRequestDto) {
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
 		if (optionalUser.isEmpty()) {
 //			throw new NotFoundException("User not found");
 		}
 		User user = optionalUser.get();
-		if (!user.getCredentials().getPassword().equals(userRequestDto.getCredentialsDto().getPassword())) {
+		if (!user.getCredentials().getPassword().equals(credentialsRequestDto.getPassword())) {
 //			throw new NotAuthorizedException("Password does not match");
 		}
 		if (user.isDeleted()) {

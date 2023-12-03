@@ -6,14 +6,16 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
 import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
+import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.entities.Hashtag;
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.entities.User;
-import com.cooksys.socialmedia.mappers.HashtagMapper;
 import com.cooksys.socialmedia.mappers.TweetMapper;
 import com.cooksys.socialmedia.mappers.UserMapper;
 import com.cooksys.socialmedia.repositories.HashtagRepository;
@@ -26,154 +28,164 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TweetServiceImpl implements TweetService {
-	
+
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
-	
+
 	private final TweetRepository tweetRepository;
 	private final TweetMapper tweetMapper;
-	
+
 	private final HashtagRepository hashtagRepository;
-	private final HashtagMapper hashtagMapper;
 
 	@Override
 	public List<TweetResponseDto> getAllTweets() {
 		List<Tweet> tweets = tweetRepository.findAll();
 		List<TweetResponseDto> toReturn = new ArrayList<>();
-		
+
 		for (Tweet tweet : tweets) {
 			toReturn.add(tweetMapper.entityToDto(tweet));
 		}
-		
+
 		return toReturn;
 	}
-	
+
 	@Override
-	public TweetResponseDto postTweet(TweetRequestDto tweetRequestDto) {
+	public TweetResponseDto postTweet(TweetRequestDto tweetRequestDto) throws NotAuthorizedException {
 		if (authenticate(tweetRequestDto.getCredentials())) {
 			Tweet currTweet = tweetMapper.dtoToEntity(tweetRequestDto);
 			User myUser = getUser(tweetRequestDto.getCredentials());
-			
+
 			myUser.getTweets().add(currTweet);
 			addHashtags(currTweet.getContent(), currTweet);
 			userRepository.saveAndFlush(myUser);
 			currTweet.setAuthor(myUser);
-			
+
 			return tweetMapper.entityToDto(tweetRepository.saveAndFlush(currTweet));
 		} else {
-			// Authentication error exception
-			return null;
+			throw new NotAuthorizedException("Invalid Username/Password provided");
 		}
 	}
 
 	@Override
-	public TweetResponseDto findTweetById(Long id) {
+	public TweetResponseDto findTweetById(Long id) throws BadRequestException {
 		Optional<Tweet> currTweet = tweetRepository.findById(id);
-		
+
 		if (currTweet.isPresent()) {
 			Tweet myTweet = currTweet.get();
+
+			if (myTweet.isDeleted()) {
+				throw new BadRequestException("The tweet you are looking for has been deleted");
+			}
 			
 			return tweetMapper.entityToDto(myTweet);
+		} else {
+			throw new BadRequestException("The tweet you are looking for was not found");
 		}
-		// Implement exception here later
-		System.out.println("No Tweet");
-		return null;
 	}
 
 	@Override
-	public TweetResponseDto postReply(TweetRequestDto tweetRequestDto, Long id) {
+	public TweetResponseDto postReply(TweetRequestDto tweetRequestDto, Long id) throws BadRequestException, NotAuthorizedException {
 		if (authenticate(tweetRequestDto.getCredentials())) {
 			Tweet currTweet = tweetMapper.dtoToEntity(tweetRequestDto);
 			User myUser = getUser(tweetRequestDto.getCredentials());
-			
+
 			Optional<Tweet> ogTweet = tweetRepository.findById(id);
 			if (ogTweet.isPresent()) {
 				Tweet myTweet = ogTweet.get();
-				
+
 				currTweet.setInReplyTo(myTweet);
 				myUser.getTweets().add(currTweet);
 				addHashtags(currTweet.getContent(), currTweet);
 				userRepository.saveAndFlush(myUser);
 				currTweet.setAuthor(myUser);
-	
+
 				return tweetMapper.entityToDto(tweetRepository.saveAndFlush(currTweet));
-			}
-			else {
-				System.out.println("Tweet not found");
-				// Catch no tweet exception here
-				return null;
+			} else {
+				throw new BadRequestException("Tweet not found");
 			}
 		} else {
-			System.out.println("Auth Error");
-			// catch authentication error exception here
-			return null;
+			throw new NotAuthorizedException("Invalid username/password provided");
+			
 		}
 	}
-	
+
 	@Override
-	public List<TweetResponseDto> getReplies(Long id) {
+	public List<TweetResponseDto> getReplies(Long id) throws BadRequestException {
 		List<Tweet> tweets = tweetRepository.findAll();
 		List<TweetResponseDto> toReturn = new ArrayList<>();
 		Optional<Tweet> currTweet = tweetRepository.findById(id);
-		
+
 		if (currTweet.isPresent()) {
 			for (Tweet tweet : tweets) {
-				if (tweet.getInReplyTo() != null && tweet.getInReplyTo().getId() == id) {
+				if (tweet.getInReplyTo() != null && tweet.getInReplyTo().getId() == id && !tweet.isDeleted()) {
 					toReturn.add(tweetMapper.entityToDto(tweet));
 				}
 			}
-			
+
 			return toReturn;
+		} else {
+			throw new BadRequestException("Tweet not found");
 		}
-		
-		
-		return null;
 	}
-	
+
 	@Override
-	public List<UserResponseDto> getLikes(Long id) {
-		List<User> users = userRepository.findAll();
+	public List<UserResponseDto> getLikes(Long id) throws BadRequestException {
+		List<User> usersThatLiked = new ArrayList<>();
 		List<UserResponseDto> toReturn = new ArrayList<>();
 		Optional<Tweet> currTweet = tweetRepository.findById(id);
-		
-		if (currTweet.isPresent()) { 
-			// Can be re-implemented later to just return Tweet.getUserLikes() after it's been mapped.
-			// Current implementation based on the way the DB is seeded.
-			for (User user : users) {
-				boolean flagLikesContainTweet = false;
-				List<Tweet> likedTweets = user.getTweets();
-				if (likedTweets.size() > 0)
-					System.out.println(likedTweets.get(0).getContent());
-				for (Tweet tweet : likedTweets) {
-					if (tweet.getId() == id) {
-						flagLikesContainTweet = true;
-						break;
-					}
-				}
-				if (flagLikesContainTweet) {
-					toReturn.add(userMapper.entityToDto(user));
-				}
+
+		if (currTweet.isPresent()) {
+			Tweet myTweet = currTweet.get();
+
+			usersThatLiked = myTweet.getUserLikes();
+
+			for (User user : usersThatLiked) {
+				toReturn.add(userMapper.entityToDto(user));
 			}
-			
+
 			return toReturn;
+		} else {
+			throw new BadRequestException("Tweet not found in repository");
 		}
-		
-		// no tweet found exception
-		return null;
-		
+	}
+
+	@Override
+	public void likeTweet(Long id, UserRequestDto userRequestDto) {
+		Optional<Tweet> currTweet = tweetRepository.findById(id);
+		CredentialsDto creds = userRequestDto.getCredentials();
+		Tweet myTweet = new Tweet();
+
+		try {
+			myTweet = currTweet.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		User user = getUser(userRequestDto.getCredentials());
+		if (authenticate(creds)) {
+
+			myTweet.getUserLikes().add(user);
+			user.getTweetLikes().add(myTweet);
+
+			tweetRepository.saveAndFlush(myTweet);
+			userRepository.saveAndFlush(user);
+		} else {
+			// Authentication error
+		}
 	}
 
 	// Private helper method
 	private void addHashtags(String content, Tweet tweet) {
-		// Splits the string into an array of strings, with the first word of each entry (besides the first entry)
+		// Splits the string into an array of strings, with the first word of each entry
+		// (besides the first entry)
 		// being a new hashtag.
 		String[] tags = content.split("#");
-		
+
 		if (tags.length == 1) {
 			return;
-		}
-		else if (tags.length > 1) {
-			// Starting at i = 1 since tags[0] isn't delimited by '#' in the original string, but the rest are.
+		} else if (tags.length > 1) {
+			// Starting at i = 1 since tags[0] isn't delimited by '#' in the original
+			// string, but the rest are.
 			for (int i = 1; i < tags.length; i++) {
 				String[] tagArray = tags[i].split(" ");
 				Hashtag myTag = getTag(tagArray[0]);
@@ -187,16 +199,18 @@ public class TweetServiceImpl implements TweetService {
 	// Private helper method
 	private Hashtag getTag(String label) {
 		List<Hashtag> allTags = hashtagRepository.findAll();
-		
+
 		for (Hashtag tag : allTags) {
-			if (tag.getLabel().equals(label)) return tag;
+			if (tag.getLabel().equals(label))
+				return tag;
 		}
-		// If code reaches this point, no tag with this label is found in the db so a new one is created
-		
+		// If code reaches this point, no tag with this label is found in the db so a
+		// new one is created
+
 		Hashtag myTag = new Hashtag();
-		
+
 		myTag.setLabel(label);
-		
+
 		return myTag;
 	}
 
@@ -208,12 +222,12 @@ public class TweetServiceImpl implements TweetService {
 				return user;
 			}
 		}
-		
+
 		// catch user not found exception
 		return null;
-		
+
 	}
-	
+
 	private boolean authenticate(CredentialsDto credentials) {
 		List<User> users = userRepository.findAll();
 		String myUsername = credentials.getUsername();
@@ -227,10 +241,9 @@ public class TweetServiceImpl implements TweetService {
 				}
 			}
 		}
-		
+
 		// No user found in database with mathcing username
 		return false;
 	}
 
-	
 }

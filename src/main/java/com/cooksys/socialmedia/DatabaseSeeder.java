@@ -1,5 +1,6 @@
 package com.cooksys.socialmedia;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -241,18 +242,49 @@ public class DatabaseSeeder implements CommandLineRunner {
         userRepository.saveAndFlush(user3);
 
         // ----- List of Liked Tweets -----
-        user1.setTweetLikes(user3.getTweets());
+        user1.setTweetLikes(user3Tweets);
+        for (Tweet tweet : user3Tweets) {
+        	List<User> userlikes = new ArrayList<>();
+        	userlikes.add(user1);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(user1);
+        tweetRepository.saveAllAndFlush(user3Tweets);
 
         user2.setTweetLikes(user1Tweets);
+        for (Tweet tweet : user1Tweets) {
+        	List<User> userlikes = new ArrayList<>();
+        	userlikes.add(user2);
+        	tweet.setUserLikes(userlikes);
+        }
         user2.setTweetLikes(user2Tweets);
+        for (Tweet tweet : user2Tweets) {
+        	List<User> userlikes = new ArrayList<>();
+        	userlikes.add(user2);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(user2);
+        tweetRepository.saveAllAndFlush(user1Tweets);
+        tweetRepository.saveAllAndFlush(user2Tweets);
+
 
         user3.setTweetLikes(user2Tweets);
+        for (Tweet tweet : user2Tweets) {
+        	List<User> userlikes = tweet.getUserLikes();
+        	userlikes.add(user3);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(user3);
-        
+        tweetRepository.saveAllAndFlush(user2Tweets);
+
         deletedUser.setTweetLikes(user2Tweets);
+        for (Tweet tweet : user2Tweets) {
+        	List<User> userlikes = tweet.getUserLikes();
+        	userlikes.add(deletedUser);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(deletedUser);
+        tweetRepository.saveAllAndFlush(user2Tweets);
 
         // ----- List of Following -----
         List<User> followingList = List.of(user2, user3, user4);

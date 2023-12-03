@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
+import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.customexceptions.NotFoundException;
+import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
@@ -24,8 +27,7 @@ public class UserController {
 	private final UserService userService;
 	
 	@PostMapping
-	public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
-		System.out.println("Controller");
+	public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) throws BadRequestException, NotAuthorizedException {
 		System.out.println(userRequestDto.getCredentials().getUsername());
 		return userService.createUser(userRequestDto);
 	}
@@ -36,9 +38,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/@{username}/follow")
-	public void follow(@RequestBody CredentialsRequestDto credentialsRequestDto, @PathVariable(value="username") String username) {
-		System.out.println("User1: " + credentialsRequestDto.getUsername());
-		userService.follow(credentialsRequestDto, username);
+	public void follow(@RequestBody CredentialsDto credentialsDto, @PathVariable(value="username") String username) throws NotAuthorizedException, NotFoundException, BadRequestException {
+		System.out.println("User1: " + credentialsDto.getUsername());
+		userService.follow(credentialsDto, username);
 	}
 	
 }

@@ -7,5 +7,6 @@ import com.cooksys.socialmedia.entities.Hashtag;
 
 @Repository
 public interface HashtagRepository extends JpaRepository<Hashtag,Long> {
-    // we can have derived qureis if required
+
+    Hashtag findHashtagByLabel(String label);
 }

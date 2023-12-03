@@ -3,10 +3,13 @@ package com.cooksys.socialmedia.entities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Embeddable
 public class Profile {
 
@@ -16,7 +19,7 @@ public class Profile {
 
 	@Column(nullable=false)
 	private String email;
-	
+
 	private String phone;
-	
+
 }

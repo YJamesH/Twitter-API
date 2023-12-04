@@ -41,19 +41,12 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="followers_following")
     private List<User> followers;
-
-    @ManyToMany
-    @JoinTable(name="user_mentions")
+    
+    @ManyToMany(mappedBy="userMentions")
     private List<Tweet> tweetMentions;
 
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name="firstName", column=@Column(name = "user_firstName")),
-            @AttributeOverride(name="lastName", column=@Column(name = "user_lastName")),
-            @AttributeOverride(name="email", column=@Column(name = "user_email")),
-            @AttributeOverride(name="phone", column=@Column(name = "user_phone"))
-    })
     private Profile profile;
 
     @Embedded

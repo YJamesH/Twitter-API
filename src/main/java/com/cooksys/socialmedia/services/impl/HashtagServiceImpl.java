@@ -15,7 +15,6 @@ import com.cooksys.socialmedia.services.TweetService;
 import org.springframework.stereotype.Service;
 
 import com.cooksys.socialmedia.dtos.HashtagResponseDto;
-import com.cooksys.socialmedia.entities.Hashtag;
 import com.cooksys.socialmedia.mappers.HashtagMapper;
 import com.cooksys.socialmedia.repositories.HashtagRepository;
 import com.cooksys.socialmedia.services.HashtagService;
@@ -32,13 +31,7 @@ public class HashtagServiceImpl implements HashtagService {
 	
 	@Override
 	public List<HashtagResponseDto> getAllTags() {
-		List<Hashtag> tags = hashtagRepository.findAll();
-		List<HashtagResponseDto> toReturn = new ArrayList<HashtagResponseDto>();
-		for (Hashtag tag : tags) {
-			toReturn.add(hashtagMapper.entityToDto(tag));
-		}
-		
-		return toReturn;
+		return hashtagMapper.entitiesToHashtagDtos(hashtagRepository.findAll());
 	}
 	//*****************************GET tags/{label}#101
 		//Retrieves all (non-deleted) tweets tagged with the given hashtag label.

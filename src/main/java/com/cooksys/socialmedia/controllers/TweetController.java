@@ -1,6 +1,5 @@
 package com.cooksys.socialmedia.controllers;
 
-import com.cooksys.socialmedia.customException.BadRequestException;
 import com.cooksys.socialmedia.customException.NotFoundException;
 import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
@@ -11,6 +10,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.cooksys.socialmedia.dtos.HashtagResponseDto;
+import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.dtos.TweetRequestDto;
+import com.cooksys.socialmedia.dtos.TweetResponseDto;
+import com.cooksys.socialmedia.dtos.UserRequestDto;
+import com.cooksys.socialmedia.dtos.UserResponseDto;
+import com.cooksys.socialmedia.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +38,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/tweets")
 public class TweetController {
+<<<<<<< HEAD
     private final TweetService tweetService;
 
     //***********************
@@ -46,11 +65,11 @@ public class TweetController {
     //Response ['User']
     @GetMapping("/{id}/mentions")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserResponseDto> getMenstionedUsers(@PathVariable("id") Long id) {
+    public List<UserResponseDto> getMentionedUsers(@PathVariable("id") Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Tweet id is NULL");
         }
-        List<UserResponseDto> tweetResponseDtos = tweetService.getMenstionedUsers(id);
+        List<UserResponseDto> tweetResponseDtos = tweetService.getMentionedUsers(id);
         return tweetResponseDtos;
     }
 
@@ -72,11 +91,11 @@ public class TweetController {
     //Response 'Tweet'
     @PostMapping("/{id}/repost")
     @ResponseStatus(HttpStatus.CREATED)
-    public TweetResponseDto addRepostToTweet(@PathVariable("id") Long id, @RequestBody CredentialsRequestDto credentialsRequestDto) {
-        if ((id == null) || (credentialsRequestDto == null)) {
+    public TweetResponseDto addRepostToTweet(@PathVariable("id") Long id, @RequestBody CredentialsDto credentialsDto) {
+        if ((id == null) || (credentialsDto == null)) {
             throw new BadRequestException("Tweet id  or credentials missing");
              }
-        TweetResponseDto tweetResponseDto = tweetService.addRepostToTweet(null, credentialsRequestDto);
+        TweetResponseDto tweetResponseDto = tweetService.addRepostToTweet(null, credentialsDto);
         return tweetResponseDto;
     }
 
@@ -85,8 +104,55 @@ public class TweetController {
     //*************Response 'Tweet'
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.GONE)
-    public TweetResponseDto deleteTweetById(@PathVariable("id") Long id, @RequestBody CredentialsRequestDto credentialsRequestDto) {
-        TweetResponseDto tweetResponseDto = tweetService.deleteTweetById(id, credentialsRequestDto);
+    public TweetResponseDto deleteTweetById(@PathVariable("id") Long id, @RequestBody CredentialsDto credentialsDto) {
+        TweetResponseDto tweetResponseDto = tweetService.deleteTweetById(id, credentialsDto);
         return tweetResponseDto;
     }
+	
+
+	@GetMapping("/{id}/tags")
+	public List<HashtagResponseDto> getHashtags(@PathVariable Long id) {
+		return tweetService.getHashtags(id);
+	}
+	
+	@GetMapping("/{id}/reposts")
+	public List<TweetResponseDto> getReposts(@PathVariable Long id) {
+		return tweetService.getReposts(id);
+	}
+	
+	@PostMapping
+	public TweetResponseDto postTweet(@RequestBody TweetRequestDto tweetRequestDto) throws NotAuthorizedException {
+		return tweetService.postTweet(tweetRequestDto);
+	}
+	
+	@GetMapping
+	public List<TweetResponseDto> getAllTweets() {
+		return tweetService.getAllTweets();
+	}
+	
+	@GetMapping("/{id}")
+	public TweetResponseDto findTweetById(@PathVariable(name="id") Long id) throws BadRequestException {
+		return tweetService.findTweetById(id);
+	}
+	
+	@PostMapping("/{id}/reply")
+	public TweetResponseDto postReply(@RequestBody TweetRequestDto tweetRequestDto, @PathVariable(value="id") Long id) throws BadRequestException, NotAuthorizedException {
+		return tweetService.postReply(tweetRequestDto, id);
+	}
+	
+	@PostMapping("/{id}/like")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void likeTweet(@PathVariable Long id, @RequestBody UserRequestDto userRequestDto) {
+		tweetService.likeTweet(id, userRequestDto);
+	}
+	
+	@GetMapping("/{id}/likes")
+	public List<UserResponseDto> getLikes(@PathVariable(value="id") Long id) throws BadRequestException {
+		return tweetService.getLikes(id);
+	}
+	
+	@GetMapping("/{id}/replies") 
+	public List<TweetResponseDto> getReplies(@PathVariable(value="id") Long id) throws BadRequestException {
+		return tweetService.getReplies(id);
+	}
 }

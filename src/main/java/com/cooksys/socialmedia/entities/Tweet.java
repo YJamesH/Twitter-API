@@ -38,15 +38,9 @@ public class Tweet {
     private boolean deleted;
 
     private String content;
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_mentiones",
-//            joinColumns = @JoinColumn(name = "tweet_id"),
-//            inverseJoinColumns = @JoinColumn(name = "user_id")
-//    )
 
-    @ManyToMany(mappedBy="tweetMentions")
-    //@JoinTable(name="user_mentions")
+    @ManyToMany
+    @JoinTable(name="user_mentions")
     private List<User> userMentions;
 
     // Users who have liked the tweet

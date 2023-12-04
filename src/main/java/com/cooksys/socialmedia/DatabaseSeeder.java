@@ -21,8 +21,8 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class DatabaseSeeder implements CommandLineRunner {
-	
-	private final HashtagRepository hashtagRepository;
+
+    private final HashtagRepository hashtagRepository;
     private final TweetRepository tweetRepository;
     private final UserRepository userRepository;
 
@@ -276,7 +276,6 @@ public class DatabaseSeeder implements CommandLineRunner {
         }
         userRepository.saveAndFlush(user3);
         tweetRepository.saveAllAndFlush(user2Tweets);
-
         deletedUser.setTweetLikes(user2Tweets);
         for (Tweet tweet : user2Tweets) {
         	List<User> userlikes = tweet.getUserLikes();

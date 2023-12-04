@@ -1,7 +1,9 @@
 package com.cooksys.socialmedia.services.impl;
 
+import com.cooksys.socialmedia.customException.BadRequestException;
+import com.cooksys.socialmedia.entities.User;
+import com.cooksys.socialmedia.repositories.UserRepository;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.cooksys.socialmedia.repositories.HashtagRepository;
@@ -37,4 +39,22 @@ public class ValidateServiceImpl implements ValidateService {
 		return false;
 	}
 
+    private final UserRepository userRepository;
+
+    //*******************************	//GET validate/username/available/@{username}#85
+    //Checks whether or not a given username is available.
+    //Response 'boolean'
+    @Override
+    public boolean getAvailableUsername(String username) {
+        if (username == null) {
+            throw new BadRequestException("Username is NULL");
+        }
+        User user = userRepository.findByCredentialsUsername(username);
+        if (user != null) {
+            return true;
+        }
+        return false;
+    }
+
 }
+

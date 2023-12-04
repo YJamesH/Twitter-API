@@ -3,14 +3,12 @@ package com.cooksys.socialmedia.entities;
 import java.sql.Timestamp;
 import java.util.List;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +17,8 @@ import lombok.NoArgsConstructor;
 //The lastUsed timestamp should be updated every time a new tweet is tagged with the hashtag.
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 public class Hashtag {
     @Id
@@ -36,7 +35,7 @@ public class Hashtag {
     @Column(nullable = false)
     @UpdateTimestamp
     private Timestamp lastUsed;
-    
+
     @ManyToMany(mappedBy="hashtags")
     private List<Tweet> tweets;
 }

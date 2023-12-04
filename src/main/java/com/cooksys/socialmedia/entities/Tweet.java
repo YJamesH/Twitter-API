@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Entity;
@@ -14,16 +15,16 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 //A tweet posted by a user.
 
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Tweet {
-    
+
     @Id
     @GeneratedValue
     private Long id;
@@ -46,7 +47,7 @@ public class Tweet {
     @ManyToMany
     @JoinTable(name="user_likes")
     private List<User> userLikes;
-    
+
     @ManyToOne
     private Tweet inReplyTo;
 
@@ -56,7 +57,7 @@ public class Tweet {
     @ManyToOne
     @JoinColumn
     private Tweet repostOf;
-    
+
     @OneToMany(mappedBy = "repostOf")
     private List<Tweet> reposts = new ArrayList<>();
 

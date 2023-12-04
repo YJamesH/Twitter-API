@@ -1,6 +1,6 @@
 package com.cooksys.socialmedia.customexceptions;
 
-public class NotAuthorizedException extends Exception {
+public class NotAuthorizedException extends RuntimeException {
 
 	/**
 	 * 

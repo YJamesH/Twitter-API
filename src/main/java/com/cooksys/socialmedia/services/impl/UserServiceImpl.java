@@ -75,11 +75,13 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public List<TweetResponseDto> getMentions(String username) {
+		System.out.println(username);
 		List<Tweet> allTweets = tweetRepository.findAll();
 		ArrayList<TweetResponseDto> mentionedTweets = new ArrayList<TweetResponseDto>();
 		
 		for (Tweet tweet : allTweets) {
 			String currContent = tweet.getContent();
+			System.out.println(currContent);
 			if (currContent != null && currContent.contains("@" + username)) {
 				mentionedTweets.add(tweetMapper.entityToDto(tweet));
 			}
@@ -88,7 +90,6 @@ public class UserServiceImpl implements UserService {
 		return mentionedTweets;
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public void follow(CredentialsDto credentialsDto, String username) throws NotAuthorizedException, NotFoundException, BadRequestException {
 		List<User> users = userRepository.findAll();
@@ -126,14 +127,14 @@ public class UserServiceImpl implements UserService {
 		// If either variable is not set, there are no usernames with the specified value and will thorw an exception.
 		if (!myUserSet) {
 			throw new NotFoundException("Username of original user not found");
-		}
+		} 
 		
 		if (myUserDeleted) {
 			throw new BadRequestException("Username of original user is deleted");
 		}
 		
 		if (!userToFollowSet) {
-			// This runs when userToFollow is never set.
+			// This runs when userToFollow is not found.
 			throw new NotFoundException("Username of user to follow not found");
 		}
 		
@@ -144,7 +145,7 @@ public class UserServiceImpl implements UserService {
 		List<User> myUserCurrFollowing = myUser.getFollowing();
 		List<User> userToFollowCurrFollowers = userToFollow.getFollowers();
 		
-		if (userToFollowCurrFollowers.contains(myUserCurrFollowing)) {
+		if (userToFollowCurrFollowers.contains(myUser)) {
 			throw new BadRequestException("Your user follows the specified user already.");
 		}
 		

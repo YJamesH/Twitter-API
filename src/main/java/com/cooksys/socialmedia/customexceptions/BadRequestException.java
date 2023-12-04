@@ -1,6 +1,6 @@
 package com.cooksys.socialmedia.customexceptions;
 
-public class BadRequestException extends Exception {
+public class BadRequestException extends RuntimeException {
 
 	/**
 	 * 

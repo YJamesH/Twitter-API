@@ -52,8 +52,7 @@ public class User {
     @JoinTable(name="followers_following")
     private List<User> followers;
     
-    @ManyToMany
-    @JoinTable(name="user_mentions")
+    @ManyToMany(mappedBy="userMentions")
     private List<Tweet> tweetMentions;
     
 

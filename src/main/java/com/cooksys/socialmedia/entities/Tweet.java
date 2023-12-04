@@ -46,6 +46,7 @@ public class Tweet {
 //    )
 
     @ManyToMany(mappedBy="tweetMentions")
+    //@JoinTable(name="user_mentions")
     private List<User> userMentions;
 
     // Users who have liked the tweet

@@ -30,8 +30,9 @@ public class UserController {
 
 	private final UserService userService;
 
-	@GetMapping("/{username}/mentions")
+	@GetMapping("/@{username}/mentions")
 	public List<TweetResponseDto> getMentions(@PathVariable(value = "username") String username) {
+		System.out.println("TEST2");
 		return userService.getMentions(username);
 	}
 	@GetMapping

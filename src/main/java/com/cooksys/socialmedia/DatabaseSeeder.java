@@ -31,7 +31,7 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // --- User 1 ---
         // Credentials
-        Credentials user1Cred = new Credentials();
+        Credentials user1Cred = new Credentials(); 
         user1Cred.setUsername("therealmc");
         user1Cred.setPassword("Password");
 

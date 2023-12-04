@@ -78,6 +78,15 @@ public class UserServiceImpl implements UserService {
 		CredentialsDto currUserCreds = userRequestDto.getCredentials();
 		ProfileDto currUserProfile = userRequestDto.getProfile();
 		
+		if (currUserCreds == null) {
+            throw new BadRequestException("Credentials is required");
+		} else if (currUserProfile == null) {
+            throw new BadRequestException("Profile is required");
+		} else if(currUserCreds.getPassword() == null || currUserCreds.getUsername() == null) {
+            throw new BadRequestException("Username and Password is required");
+		} else if (currUserProfile.getEmail() == null) {
+            throw new BadRequestException("Email is required to create User");
+		}
 		
 		for (User user : currUsers) {
 			if (user.getCredentials().getUsername().equals(currUserCreds.getUsername())) {
@@ -108,18 +117,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<TweetResponseDto> getMentions(String username) {
 		if (username == null) throw new IllegalArgumentException("Username is NULL");
-
+		
 		List<Tweet> allTweets = tweetRepository.findAll();
-		List<TweetResponseDto> mentionedTweets = new ArrayList<TweetResponseDto>();
-		if (allTweets != null && !allTweets.isEmpty()) {
-			for (Tweet tweet : allTweets) {
-				String currContent = tweet.getContent();
-				if (currContent.contains("@" + username)) {
-					mentionedTweets.add(tweetMapper.entityToDto(tweet));
-				}
-			}
+		List<TweetResponseDto> mentionedTweets = new ArrayList<>();
+		Optional<User> user = userRepository.findByCredentialsUsername(username);
+		
+		if (user.isPresent()) {
+		} else {
+			throw new NotFoundException("Specified username not found in DB.");
 		}
-
+		
+		for (Tweet tweet : allTweets) {
+			String content = tweet.getContent();
+			if (content != null && content.contains("@" + username))
+				mentionedTweets.add(tweetMapper.entityToDto(tweet));
+		}
+		System.out.println(mentionedTweets.size());
 		return mentionedTweets;
 	}
 

@@ -1,10 +1,5 @@
 package com.cooksys.socialmedia.mappers;
 
-import com.cooksys.socialmedia.dtos.HashtagDto;
-import com.cooksys.socialmedia.dtos.TweetRequestDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.entities.Tweet;
-import com.cooksys.socialmedia.entities.User;
 import java.util.List;
 
 import org.mapstruct.Mapper;
@@ -17,7 +12,7 @@ import com.cooksys.socialmedia.entities.Hashtag;
 public interface HashtagMapper {
 	List<HashtagResponseDto> entitiesToHashtagDtos(List<Hashtag> entities);
 	List<HashtagResponseDto> entitiesToResponseDtos (List<Hashtag> hashtags);
-	Hashtag requestDtoToEntity(HashtagDto hashtagRequestDto);
-	List<HashtagResponseDto> requestDtosToEntities(List<HashtagDto> hashtagRequestDtos);
+//	Hashtag requestDtoToEntity(HashtagDto hashtagRequestDto);
+//	List<HashtagResponseDto> requestDtosToEntities(List<HashtagDto> hashtagRequestDtos);
 
 }

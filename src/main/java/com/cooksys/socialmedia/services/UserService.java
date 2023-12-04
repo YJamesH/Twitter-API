@@ -9,9 +9,6 @@ import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
-import com.cooksys.socialmedia.entities.Tweet;
-import com.cooksys.socialmedia.entities.User;
-import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 	
@@ -22,8 +19,6 @@ public interface UserService {
 	List<TweetResponseDto> getTweets(String username);
 	
 	List<TweetResponseDto> getMentions(String username);
-
-	void follow(CredentialsDto credentialsDto, String username);
 
 	List<UserResponseDto> getUsersWithActiveFollowers(String username);
 

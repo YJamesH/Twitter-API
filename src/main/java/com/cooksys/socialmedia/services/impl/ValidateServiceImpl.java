@@ -1,13 +1,14 @@
 package com.cooksys.socialmedia.services.impl;
 
-import com.cooksys.socialmedia.customException.BadRequestException;
-import com.cooksys.socialmedia.entities.User;
-import com.cooksys.socialmedia.repositories.UserRepository;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
-import com.cooksys.socialmedia.repositories.HashtagRepository;
+import com.cooksys.socialmedia.customException.BadRequestException;
+import com.cooksys.socialmedia.customException.NotFoundException;
 import com.cooksys.socialmedia.entities.User;
+import com.cooksys.socialmedia.repositories.HashtagRepository;
 import com.cooksys.socialmedia.repositories.UserRepository;
 import com.cooksys.socialmedia.services.ValidateService;
 
@@ -39,7 +40,6 @@ public class ValidateServiceImpl implements ValidateService {
 		return false;
 	}
 
-    private final UserRepository userRepository;
 
     //*******************************	//GET validate/username/available/@{username}#85
     //Checks whether or not a given username is available.
@@ -48,9 +48,20 @@ public class ValidateServiceImpl implements ValidateService {
     public boolean getAvailableUsername(String username) {
         if (username == null) {
             throw new BadRequestException("Username is NULL");
-        }
-        User user = userRepository.findByCredentialsUsername(username);
-        if (user != null) {
+        }		
+        
+        Optional<User> myUser = userRepository.findByCredentialsUsername(username);
+		User user = new User();
+		boolean setFlag = false;
+		
+		if (myUser.isPresent()) {
+			user = myUser.get();
+			setFlag = true;
+		} else {
+			throw new NotFoundException("User not found");
+		}
+		
+        if (setFlag) {
             return true;
         }
         return false;

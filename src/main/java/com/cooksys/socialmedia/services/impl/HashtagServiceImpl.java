@@ -1,21 +1,18 @@
 package com.cooksys.socialmedia.services.impl;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.cooksys.socialmedia.customException.BadRequestException;
-import com.cooksys.socialmedia.customException.NotFoundException;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.entities.Tweet;
-import com.cooksys.socialmedia.mappers.TweetMapper;
-import com.cooksys.socialmedia.repositories.TweetRepository;
-import com.cooksys.socialmedia.services.TweetService;
 import org.springframework.stereotype.Service;
 
+import com.cooksys.socialmedia.customException.NotFoundException;
 import com.cooksys.socialmedia.dtos.HashtagResponseDto;
+import com.cooksys.socialmedia.dtos.TweetResponseDto;
+import com.cooksys.socialmedia.entities.Hashtag;
+import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.mappers.HashtagMapper;
+import com.cooksys.socialmedia.mappers.TweetMapper;
 import com.cooksys.socialmedia.repositories.HashtagRepository;
 import com.cooksys.socialmedia.services.HashtagService;
 

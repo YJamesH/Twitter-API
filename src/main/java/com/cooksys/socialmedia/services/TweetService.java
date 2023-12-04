@@ -1,17 +1,12 @@
 package com.cooksys.socialmedia.services;
 
-<<<<<<< HEAD
-import com.cooksys.socialmedia.customException.NotAuthorizedException;
-import com.cooksys.socialmedia.customException.NotFoundException;
-import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserResponseDto;
-import com.cooksys.socialmedia.entities.Tweet;
 import java.util.List;
 
-import com.cooksys.socialmedia.dtos.HashtagResponseDto;
+import com.cooksys.socialmedia.customException.NotAuthorizedException;
+import com.cooksys.socialmedia.customException.NotFoundException;
 import com.cooksys.socialmedia.customexceptions.BadRequestException;
-import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.dtos.CredentialsDto;
+import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;

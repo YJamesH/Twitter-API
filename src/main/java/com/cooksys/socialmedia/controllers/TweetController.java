@@ -1,18 +1,9 @@
 package com.cooksys.socialmedia.controllers;
 
-import com.cooksys.socialmedia.customException.NotFoundException;
-import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserResponseDto;
-import com.cooksys.socialmedia.entities.Tweet;
-import com.cooksys.socialmedia.services.TweetService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cooksys.socialmedia.dtos.HashtagResponseDto;
+import com.cooksys.socialmedia.customException.NotFoundException;
 import com.cooksys.socialmedia.customexceptions.BadRequestException;
 import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.dtos.CredentialsDto;
+import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
@@ -32,13 +25,10 @@ import com.cooksys.socialmedia.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tweets")
 public class TweetController {
-<<<<<<< HEAD
     private final TweetService tweetService;
 
     //***********************
@@ -46,7 +36,7 @@ public class TweetController {
     //****************['Tweet'] response
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<TweetResponseDto> getSortedTweets() {
+    public List<TweetResponseDto> getAllTweets() {
         List<TweetResponseDto> sortedTweets = tweetService.getSortedTweets();
         if (sortedTweets == null) {
             throw new NotFoundException("Not found");
@@ -124,11 +114,7 @@ public class TweetController {
 	public TweetResponseDto postTweet(@RequestBody TweetRequestDto tweetRequestDto) throws NotAuthorizedException {
 		return tweetService.postTweet(tweetRequestDto);
 	}
-	
-	@GetMapping
-	public List<TweetResponseDto> getAllTweets() {
-		return tweetService.getAllTweets();
-	}
+
 	
 	@GetMapping("/{id}")
 	public TweetResponseDto findTweetById(@PathVariable(name="id") Long id) throws BadRequestException {

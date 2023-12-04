@@ -1,29 +1,20 @@
 package com.cooksys.socialmedia.services.impl;
 
-import com.cooksys.socialmedia.customException.BadRequestException;
-import com.cooksys.socialmedia.customException.NotAuthorizedException;
-import com.cooksys.socialmedia.customException.NotFoundException;
-import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
-import com.cooksys.socialmedia.dtos.ErrorDto;
-import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserResponseDto;
-import com.cooksys.socialmedia.entities.Tweet;
-import com.cooksys.socialmedia.entities.User;
-import com.cooksys.socialmedia.mappers.TweetMapper;
-import com.cooksys.socialmedia.mappers.UserMapper;
-import com.cooksys.socialmedia.repositories.TweetRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.cooksys.socialmedia.customexceptions.BadRequestException;
-import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
-import com.cooksys.socialmedia.customexceptions.NotFoundException;
-import com.cooksys.socialmedia.dtos.HashtagResponseDto;
-import com.cooksys.socialmedia.mappers.HashtagMapper;
+import com.cooksys.socialmedia.customException.BadRequestException;
+import com.cooksys.socialmedia.customException.NotAuthorizedException;
+import com.cooksys.socialmedia.customException.NotFoundException;
 import com.cooksys.socialmedia.dtos.CredentialsDto;
+import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
@@ -31,6 +22,7 @@ import com.cooksys.socialmedia.dtos.UserResponseDto;
 import com.cooksys.socialmedia.entities.Hashtag;
 import com.cooksys.socialmedia.entities.Tweet;
 import com.cooksys.socialmedia.entities.User;
+import com.cooksys.socialmedia.mappers.HashtagMapper;
 import com.cooksys.socialmedia.mappers.TweetMapper;
 import com.cooksys.socialmedia.mappers.UserMapper;
 import com.cooksys.socialmedia.repositories.HashtagRepository;
@@ -39,11 +31,6 @@ import com.cooksys.socialmedia.repositories.UserRepository;
 import com.cooksys.socialmedia.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -222,7 +209,7 @@ public class TweetServiceImpl implements TweetService {
 	
 	@Override
 	public List<TweetResponseDto> getReposts(Long id) {
-		return tweetMapper.entitiesToTweetDtos(getTweetWithId(id).getReposts());
+		return tweetMapper.entitiesToResponseDtos(getTweetWithId(id).getReposts());
 	}
 
 	@Override

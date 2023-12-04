@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 
 import com.cooksys.socialmedia.dtos.HashtagResponseDto;
+import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.entities.Hashtag;
 import com.cooksys.socialmedia.entities.Tweet;
@@ -16,5 +17,5 @@ public interface TweetMapper {
 
 	List<TweetResponseDto> entitiesToTweetDtos(List<Tweet> entities);
 
-
+	Tweet dtoToEntity(TweetRequestDto tweetRequestDto);
 }

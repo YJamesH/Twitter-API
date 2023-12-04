@@ -2,7 +2,10 @@ package com.cooksys.socialmedia.services;
 
 import java.util.List;
 
-import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
+import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.customexceptions.NotFoundException;
+import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
@@ -17,16 +20,11 @@ public interface UserService {
 
 	List<UserResponseDto> getFollowing(String username);
 
-	void unfollowUser(String username, CredentialsRequestDto credentialsRequestDto);
+	void unfollowUser(String username, CredentialsDto credentialsDto);
 
-	UserResponseDto deleteUser(String username, CredentialsRequestDto credentialsRequestDto);
+	UserResponseDto deleteUser(String username, CredentialsDto credentialsDto);
 
-//	List<TweetResponseDto> getMentions(String username);
+	void follow(CredentialsDto credentialsDto, String username) throws NotAuthorizedException, NotFoundException, BadRequestException;
 
-//	void follow(CredentialsRequestDto credentialsRequestDto, String username);
-
-
-
-
-
+	UserResponseDto createUser(UserRequestDto userRequestDto) throws BadRequestException, NotAuthorizedException;
 }

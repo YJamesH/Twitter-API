@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
+import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.customexceptions.NotFoundException;
+import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
@@ -50,27 +53,31 @@ public class UserController {
 	@PostMapping("/@{username}/unfollow")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void unfollowUser(@PathVariable(value = "username") String username,
-			@RequestBody CredentialsRequestDto credentialsRequestDto) {
-		userService.unfollowUser(username, credentialsRequestDto);
+			@RequestBody CredentialsDto credentialsDto) {
+		userService.unfollowUser(username, credentialsDto);
 	}
 
 	@DeleteMapping("/@{username}")
 	public UserResponseDto deleteCustomer(@PathVariable(value = "username") String username,
-			@RequestBody CredentialsRequestDto credentialsRequestDto) {
-		return userService.deleteUser(username, credentialsRequestDto);
+			@RequestBody CredentialsDto credentialsDto) {
+		return userService.deleteUser(username, credentialsDto);
 	}
-
-	// devon's implement
-//	@GetMapping("/@{username}/mentions")
-//	public List<TweetResponseDto> getMentions(@PathVariable(value = "username") String username) {
-//		return userService.getMentions(username);
-//	}
-
-//	@PostMapping("/@{username}/follow")
-//	public void follow(@RequestBody CredentialsRequestDto credentialsRequestDto,
-//			@PathVariable(value = "username") String username) {
-//		userService.follow(credentialsRequestDto, username);
-//	}
-//
-
+	
+	@PostMapping
+	public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) throws BadRequestException, NotAuthorizedException {
+		System.out.println(userRequestDto.getCredentials().getUsername());
+		return userService.createUser(userRequestDto);
+	}
+	
+	@GetMapping("/@{username}/mentions")
+	public List<TweetResponseDto> getMentions(@PathVariable(value="username") String username ) {
+		return userService.getMentions(username);
+	}
+	
+	@PostMapping("/@{username}/follow")
+	public void follow(@RequestBody CredentialsDto credentialsDto, @PathVariable(value="username") String username) throws NotAuthorizedException, NotFoundException, BadRequestException {
+		System.out.println("User1: " + credentialsDto.getUsername());
+		userService.follow(credentialsDto, username);
+	}
+	
 }

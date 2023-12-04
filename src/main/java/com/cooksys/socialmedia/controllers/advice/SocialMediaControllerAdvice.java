@@ -30,7 +30,7 @@ public class SocialMediaControllerAdvice {
 	}
 	
 	@ResponseStatus(HttpStatus.UNAUTHORIZED) 
-	@ExceptionHandler(NotAuthorizedException.class)
+	@ExceptionHandler(NotAuthorizedException.class) 
 	public ErrorDto handleNotAuthorizedException(HttpServletRequest request, NotAuthorizedException notAuthorizedException) {
 		return new ErrorDto(notAuthorizedException.getMessage());
 	}

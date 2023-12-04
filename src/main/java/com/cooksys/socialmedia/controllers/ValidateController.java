@@ -16,11 +16,15 @@ import lombok.RequiredArgsConstructor;
 public class ValidateController {
 
 	private final ValidateService validateService;
-
 	
 	@GetMapping("/tag/exists/{label}")
 	public boolean validateHashtagExists(@PathVariable(value = "label") String label) {
 		return validateService.validateHashtagExists(label);
+  }
+  
+	@GetMapping("/username/exists/@{username}")
+	public boolean validateUsername(@PathVariable(value="username") String username) {
+		return validateService.validateUsername(username);
 	}
 	
 }

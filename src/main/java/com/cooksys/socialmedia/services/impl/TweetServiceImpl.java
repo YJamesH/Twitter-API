@@ -36,15 +36,15 @@ public class TweetServiceImpl implements TweetService {
     //['Tweet'] response
     @Override
     public List<TweetResponseDto> getSortedTweets() {
-        List<TweetResponseDto> tweets = tweetMapper.entitiesToResponseDtos(tweetRepository.findAll());
-
-        //validation for existed tweets
+        List<Tweet> tweets = tweetRepository.findAll();
         if( tweets == null ) {
             throw new NotFoundException("Tweets not found");
         }
-        // for reverse-chronological order
-        Comparator<TweetResponseDto> comp = (t1, t2)-> t1.getId().compareTo(t2.getId());
-        return tweets.stream().sorted(comp.reversed()).collect(Collectors.toList());
+        Comparator<Tweet> comp = (t1, t2)-> t1.getId().compareTo(t2.getId());
+        List<Tweet> sortedTweets = tweets.stream().filter(t->t.isDeleted()).sorted(comp.reversed()).collect(Collectors.toList());
+
+        List<TweetResponseDto> tweetDtos = tweetMapper.entitiesToResponseDtos(sortedTweets);
+        return tweetDtos;
     }
 
     @Override

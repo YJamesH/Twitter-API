@@ -24,7 +24,7 @@ public class ValidateServiceImpl implements ValidateService {
             throw new BadRequestException("Username is NULL");
         }
         User user = userRepository.findByCredentialsUsername(username);
-        if (user == null) {
+        if (user != null) {
             return true;
         }
         return false;

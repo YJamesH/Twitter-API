@@ -36,16 +36,17 @@ public class UserController {
 	//**************************
 	//***********	//GET users/@{username}/followers#104
 	@GetMapping("/{username}/followers")
-	public ResponseEntity<List<UserResponseDto>> getUsersWithActiveFollowers(@PathVariable(value = "username") String username) {
+	@ResponseStatus(HttpStatus.OK)
+	public List<UserResponseDto> getUsersWithActiveFollowers(@PathVariable(value = "username") String username) {
 		if (username == null) {
 			throw new BadRequestException("Username is null");
 		} else {
 			List<UserResponseDto> activeFollowers = userService.getUsersWithActiveFollowers(username);
-			return new ResponseEntity<>(activeFollowers, HttpStatus.OK);
+			return activeFollowers;
 		}
 	}
 
-	//******************* working tested
+	//*******************
 	//PATCH users/@{username}#81
 	//Request
 	// {
@@ -54,24 +55,26 @@ public class UserController {
 	//}
 	//response 'User'
 	@PatchMapping("/{username}")
-	public ResponseEntity<UserResponseDto> updateUserProfile(@PathVariable("username") String username, @RequestBody CredentialsRequestDto credentialsRequestDto) {
+	@ResponseStatus(HttpStatus.OK)
+	public UserResponseDto updateUserProfile(@PathVariable("username") String username, @RequestBody CredentialsRequestDto credentialsRequestDto) {
 		if (username == null || credentialsRequestDto == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			throw  new BadRequestException( "Username or Credentials are null");
 		}
 		UserResponseDto userResponseDto = userService.updateUserProfile(username, credentialsRequestDto);
-		return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+		return userResponseDto;
 	}
 
 	//*************
 	//GET users/@{username}/feed#107
 	//Response ['Tweet']
 	@GetMapping("/{username}/feed")
-	public ResponseEntity<List<TweetResponseDto>> getTweetsByUsername(@PathVariable ("username") String username) {
+	@ResponseStatus(HttpStatus.OK)
+	public List<TweetResponseDto> getTweetsByUsername(@PathVariable ("username") String username) {
 		if(username == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			throw  new BadRequestException( "Username is null");
 		}
 		List<TweetResponseDto> tweetResponseDtos = userService.getTweetsByUsername(username);
-		return new ResponseEntity<>(tweetResponseDtos,HttpStatus.OK);
+		return tweetResponseDtos;
 	}
 
 //********************************

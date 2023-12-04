@@ -26,13 +26,14 @@ public class TweetController {
     //************GET tweets#100
     //****************['Tweet'] response
     @GetMapping()
-    public ResponseEntity<List<TweetResponseDto>> getSortedTweets() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<TweetResponseDto> getSortedTweets() {
         List<TweetResponseDto> sortedTweets = tweetService.getSortedTweets();
         if (sortedTweets == null) {
             throw new NotFoundException("Not found");
             //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(sortedTweets, HttpStatus.OK);
+        return sortedTweets;
     }
     //******************
     //GET tweets/{id}/mentions#88
@@ -44,12 +45,13 @@ public class TweetController {
     //IMPORTANT Remember that tags and mentions must be parsed by the server!
     //Response ['User']
     @GetMapping("/{id}/mentions")
-    public ResponseEntity<List<UserResponseDto>> getMenstionedUsers(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserResponseDto> getMenstionedUsers(@PathVariable("id") Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Tweet id is NULL");
         }
         List<UserResponseDto> tweetResponseDtos = tweetService.getMenstionedUsers(id);
-        return new ResponseEntity<>(tweetResponseDtos, HttpStatus.OK);
+        return tweetResponseDtos;
     }
 
 
@@ -57,9 +59,10 @@ public class TweetController {
     //GET tweets/{id}/context#91
     //Response Context'
     @GetMapping("/{id}/context")
-    public ResponseEntity<TweetResponseDto> getTweetContextById(@PathVariable("id") Long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public TweetResponseDto getTweetContextById(@PathVariable("id") Long id) {
         TweetResponseDto tweetResponseDto = tweetService.getTweetContextById(id);
-        return new ResponseEntity<>(tweetResponseDto, HttpStatus.OK);
+        return tweetResponseDto;
     }
 
     //***********************
@@ -68,21 +71,22 @@ public class TweetController {
     //************Request 'Credentials'
     //Response 'Tweet'
     @PostMapping("/{id}/repost")
-    public ResponseEntity<TweetResponseDto> addRepostToTweet(@PathVariable("id") Long id, @RequestBody CredentialsRequestDto credentialsRequestDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public TweetResponseDto addRepostToTweet(@PathVariable("id") Long id, @RequestBody CredentialsRequestDto credentialsRequestDto) {
         if ((id == null) || (credentialsRequestDto == null)) {
-            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             throw new BadRequestException("Tweet id  or credentials missing");
              }
         TweetResponseDto tweetResponseDto = tweetService.addRepostToTweet(null, credentialsRequestDto);
-        return new ResponseEntity<>(tweetResponseDto, HttpStatus.CREATED);
+        return tweetResponseDto;
     }
 
     //**********************
     //**************DELETE tweets/{id}#97
     //*************Response 'Tweet'
     @DeleteMapping("/{id}")
-    public ResponseEntity<TweetResponseDto> deleteTweetById(@PathVariable("id") Long id, @RequestBody CredentialsRequestDto credentialsRequestDto) {
+    @ResponseStatus(HttpStatus.GONE)
+    public TweetResponseDto deleteTweetById(@PathVariable("id") Long id, @RequestBody CredentialsRequestDto credentialsRequestDto) {
         TweetResponseDto tweetResponseDto = tweetService.deleteTweetById(id, credentialsRequestDto);
-        return new ResponseEntity<>(tweetResponseDto, HttpStatus.GONE);
+        return tweetResponseDto;
     }
 }

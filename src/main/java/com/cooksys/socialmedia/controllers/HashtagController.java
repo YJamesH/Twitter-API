@@ -5,10 +5,7 @@ import java.util.List;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.services.HashtagService;
@@ -30,10 +27,9 @@ public class HashtagController {
 	//*******GET tags/{label}#101*************
 	//*******Response ['Tweet']**********
 	@GetMapping("/{label}")
-	public ResponseEntity<List<TweetResponseDto>> getTweetsByLabel(@PathVariable ("label") String label) {
+	@ResponseStatus(HttpStatus.OK)
+	public List<TweetResponseDto> getTweetsByLabel(@PathVariable ("label") String label) {
 		List<TweetResponseDto> tweetResponseDto = hashtagService.getTweetsByLabel(label);
-		return  new ResponseEntity<>(tweetResponseDto, HttpStatus.OK);
-
+		return  tweetResponseDto;
 	}
-
 }

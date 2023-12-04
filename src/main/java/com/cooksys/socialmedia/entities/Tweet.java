@@ -44,6 +44,7 @@ public class Tweet {
 //            joinColumns = @JoinColumn(name = "tweet_id"),
 //            inverseJoinColumns = @JoinColumn(name = "user_id")
 //    )
+
     @ManyToMany(mappedBy="tweetMentions")
     private List<User> userMentions;
 

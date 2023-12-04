@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.cooksys.socialmedia.customexceptions.BadRequestException;
 import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
 import com.cooksys.socialmedia.customexceptions.NotFoundException;
+import com.cooksys.socialmedia.dtos.HashtagResponseDto;
+import com.cooksys.socialmedia.mappers.HashtagMapper;
 import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
@@ -37,6 +39,30 @@ public class TweetServiceImpl implements TweetService {
 	private final TweetMapper tweetMapper;
 
 	private final HashtagRepository hashtagRepository;
+	private final HashtagMapper hashtagMapper;
+	
+	@Override
+	public List<HashtagResponseDto> getHashtags(Long id) {
+		return hashtagMapper.entitiesToHashtagDtos(getTweetWithId(id).getHashtags());
+	}
+	
+	@Override
+	public List<TweetResponseDto> getReposts(Long id) {
+		return tweetMapper.entitiesToTweetDtos(getTweetWithId(id).getReposts());
+	}
+
+	@Override
+	public void likeTweet(Long id, UserRequestDto userRequestDto) {
+		Tweet tweet = getTweetWithId(id);
+		User user = getUserAndCheckCredentials(userRequestDto);
+		
+		tweet.getUserLikes().add(user);
+		user.getTweetLikes().add(tweet);
+		
+		tweetRepository.saveAndFlush(tweet);
+		userRepository.saveAndFlush(user);
+	}
+
 
 	@Override
 	public List<TweetResponseDto> getAllTweets() {
@@ -155,31 +181,6 @@ public class TweetServiceImpl implements TweetService {
 		}
 	}
 
-	@Override
-	public void likeTweet(Long id, UserRequestDto userRequestDto) {
-		Optional<Tweet> currTweet = tweetRepository.findById(id);
-		CredentialsDto creds = userRequestDto.getCredentials();
-		Tweet myTweet = new Tweet();
-
-		try {
-			myTweet = currTweet.get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		User user = getUser(userRequestDto.getCredentials());
-		if (authenticate(creds)) {
-
-			myTweet.getUserLikes().add(user);
-			user.getTweetLikes().add(myTweet);
-
-			tweetRepository.saveAndFlush(myTweet);
-			userRepository.saveAndFlush(user);
-		} else {
-			// Authentication error, left unimplemented since James is doing this method
-		}
-	}
-
 	// Private helper method to flush all new hashtags
 	private void addHashtags(String content, Tweet tweet) {
 		// Splits the string into an array of strings, with the first word of each entry
@@ -260,4 +261,34 @@ public class TweetServiceImpl implements TweetService {
 		return false;
 	}
 
+	public Tweet getTweetWithId(Long id) {
+		Optional<Tweet> optionalTweet = tweetRepository.findById(id);
+		if (optionalTweet.isEmpty()) {
+			throw new NotFoundException("Tweet not found");
+		}
+		Tweet tweet = optionalTweet.get();
+		if (tweet.isDeleted()) {
+			throw new BadRequestException("Tweet deleted");
+		}
+		return tweet;
+	}
+
+	public User getUserAndCheckCredentials(UserRequestDto userRequestDto) {
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(userRequestDto.getCredentialsDto().getUsername());
+		if (optionalUser.isEmpty()) {
+			throw new NotFoundException("User not found");
+		} 
+		User user = optionalUser.get();
+		
+		String userPassword = user.getCredentials().getPassword();
+		String userInRepoPassword = userRequestDto.getCredentialsDto().getPassword();
+		if (!userPassword.equals(userInRepoPassword)) {
+			throw new NotAuthorizedException("Password does not match");
+		}
+		if (user.isDeleted()) {
+			throw new BadRequestException("User deleted");
+		}
+		return user;
+	}
+  
 }

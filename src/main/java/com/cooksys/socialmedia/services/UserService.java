@@ -12,7 +12,17 @@ import com.cooksys.socialmedia.dtos.UserResponseDto;
 
 public interface UserService {
 	
-	List<TweetResponseDto> getMentions(String username);
+	List<UserResponseDto> getAllUsers();
+	
+	UserResponseDto getUser(String username);
+
+	List<TweetResponseDto> getTweets(String username);
+
+	List<UserResponseDto> getFollowing(String username);
+
+	void unfollowUser(String username, CredentialsDto credentialsDto);
+
+	UserResponseDto deleteUser(String username, CredentialsDto credentialsDto);
 
 	void follow(CredentialsDto credentialsDto, String username) throws NotAuthorizedException, NotFoundException, BadRequestException;
 

@@ -2,6 +2,7 @@ package com.cooksys.socialmedia.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,35 @@ public class UserServiceImpl implements UserService {
 	private final CredentialsMapper credentialsMapper;
 	private final ProfileMapper profileMapper;
 	
+	@Override
+	public List<UserResponseDto> getAllUsers() {
+		List<User> usersNotDeleted = new ArrayList<>();
+		for (User user : userRepository.findAll()) {
+			if(!user.isDeleted()) {
+				usersNotDeleted.add(user);
+			}
+		}
+		return userMapper.entitiesToUserDtos(usersNotDeleted);
+	}
+	
+	@Override
+	public UserResponseDto getUser(String username) {
+		return userMapper.entityToDto(getUserWithUsername(username));
+	}
+    
+  @Override
+	public List<TweetResponseDto> getTweets(String username) {
+		User user = getUserWithUsername(username);
+		List<Tweet> allTweets = tweetRepository.findAll();
+		ArrayList<TweetResponseDto> tweetsByUser = new ArrayList<>();
+		for (Tweet tweet : allTweets) {
+			if (tweet.getAuthor().equals(user) && !tweet.isDeleted()) {
+				tweetsByUser.add(tweetMapper.entityToDto(tweet));
+			}
+		}
+		return tweetsByUser;
+	}
+    
 	
 	@Override
 	public UserResponseDto createUser(UserRequestDto userRequestDto) throws BadRequestException, NotAuthorizedException {
@@ -91,6 +121,72 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<UserResponseDto> getFollowing(String username) {
+		return userMapper.entitiesToUserDtos(getUserWithUsername(username).getFollowing());
+	}
+	
+	@Override
+	public void unfollowUser(String username, CredentialsRequestDto credentialsRequestDto) {
+		Credentials credentials = credentialsMapper.dtoToEntity(credentialsRequestDto);
+		User following = getUserWithUsername(username);
+
+		// check if credentials match a user in the database
+		User userToCheck = getUserWithUsername(credentialsRequestDto.getUsername());
+		if (!credentials.equals(userToCheck.getCredentials())) {
+			throw new BadRequestException("Cannot unfollow yourself");
+		}
+
+		// check if users are following each other
+		if (userToCheck.getFollowing().contains(following)) {
+			userToCheck.getFollowing().remove(following);
+			following.getFollowers().remove(userToCheck);
+			userRepository.saveAndFlush(userToCheck);
+			userRepository.saveAndFlush(following);
+		} else {
+			throw new BadRequestException("Not following user");
+		}
+	}
+	
+	
+	@Override
+	public UserResponseDto deleteUser(String username, CredentialsRequestDto credentialsRequestDto) {
+		User user = getUserAndCheckCredentials(username, credentialsRequestDto);
+		user.setDeleted(true);
+		userRepository.saveAndFlush(user);
+		return userMapper.entityToDto(user);
+	}
+
+	
+	// HELPER METHODS //
+	private User getUserWithUsername(String username) {
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
+		if (optionalUser.isEmpty()) {
+			throw new NotFoundException("User not found");
+		}
+		User user = optionalUser.get();
+		if (user.isDeleted()) {
+			throw new BadRequestException("User deleted");
+		}
+		return user;
+	}
+
+	private User getUserAndCheckCredentials(String username, CredentialsDto credentialsDto) {
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
+		if (optionalUser.isEmpty()) {
+			throw new NotFoundException("User not found");
+		}
+		User user = optionalUser.get();
+		if (!user.getCredentials().getPassword().equals(credentialsDto.getPassword())) {
+			throw new NotAuthorizedException("Password does not match");
+		}
+		if (user.isDeleted()) {
+			throw new BadRequestException("User deleted");
+		}
+		return user;
+	}
+
+
+  @Override
 	public void follow(CredentialsDto credentialsDto, String username) throws NotAuthorizedException, NotFoundException, BadRequestException {
 		List<User> users = userRepository.findAll();
 		User myUser = new User();

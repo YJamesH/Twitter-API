@@ -18,8 +18,8 @@ public class HashtagController {
 
 	private final HashtagService hashtagService;
 	
-//	@GetMapping
-//	public List<HashtagResponseDto> getAllTags() {
-//		return hashtagService.getAllTags();
-//	}
+	@GetMapping
+	public List<HashtagResponseDto> getAllTags() {
+		return hashtagService.getAllTags();
+	}
 }

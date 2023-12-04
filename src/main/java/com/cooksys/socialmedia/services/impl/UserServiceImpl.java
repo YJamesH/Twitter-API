@@ -126,12 +126,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void unfollowUser(String username, CredentialsRequestDto credentialsRequestDto) {
-		Credentials credentials = credentialsMapper.dtoToEntity(credentialsRequestDto);
+	public void unfollowUser(String username, CredentialsDto credentialsDto) {
+		Credentials credentials = credentialsMapper.dtoToEntity(credentialsDto);
 		User following = getUserWithUsername(username);
 
 		// check if credentials match a user in the database
-		User userToCheck = getUserWithUsername(credentialsRequestDto.getUsername());
+		User userToCheck = getUserWithUsername(credentialsDto.getUsername());
 		if (!credentials.equals(userToCheck.getCredentials())) {
 			throw new BadRequestException("Cannot unfollow yourself");
 		}
@@ -149,8 +149,8 @@ public class UserServiceImpl implements UserService {
 	
 	
 	@Override
-	public UserResponseDto deleteUser(String username, CredentialsRequestDto credentialsRequestDto) {
-		User user = getUserAndCheckCredentials(username, credentialsRequestDto);
+	public UserResponseDto deleteUser(String username, CredentialsDto credentialsDto) {
+		User user = getUserAndCheckCredentials(username, credentialsDto);
 		user.setDeleted(true);
 		userRepository.saveAndFlush(user);
 		return userMapper.entityToDto(user);

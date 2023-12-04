@@ -6,6 +6,7 @@ import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 
 public interface HashtagService {
 
-//	List<HashtagResponseDto> getAllTags();
+
+	List<HashtagResponseDto> getAllTags();
 	
 }

@@ -274,14 +274,14 @@ public class TweetServiceImpl implements TweetService {
 	}
 
 	public User getUserAndCheckCredentials(UserRequestDto userRequestDto) {
-		Optional<User> optionalUser = userRepository.findByCredentialsUsername(userRequestDto.getCredentialsDto().getUsername());
+		Optional<User> optionalUser = userRepository.findByCredentialsUsername(userRequestDto.getCredentials().getUsername());
 		if (optionalUser.isEmpty()) {
 			throw new NotFoundException("User not found");
 		} 
 		User user = optionalUser.get();
 		
 		String userPassword = user.getCredentials().getPassword();
-		String userInRepoPassword = userRequestDto.getCredentialsDto().getPassword();
+		String userInRepoPassword = userRequestDto.getCredentials().getPassword();
 		if (!userPassword.equals(userInRepoPassword)) {
 			throw new NotAuthorizedException("Password does not match");
 		}

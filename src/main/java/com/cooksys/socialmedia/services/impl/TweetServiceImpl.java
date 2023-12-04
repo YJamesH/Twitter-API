@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.customexceptions.NotFoundException;
 import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserRequestDto;
@@ -51,11 +54,11 @@ public class TweetServiceImpl implements TweetService {
 	public Tweet getTweetWithId(Long id) {
 		Optional<Tweet> optionalTweet = tweetRepository.findById(id);
 		if (optionalTweet.isEmpty()) {
-//			throw new NotFoundException("Tweet not found");
+			throw new NotFoundException("Tweet not found");
 		}
 		Tweet tweet = optionalTweet.get();
 		if (tweet.isDeleted()) {
-//			throw new BadRequestException("Tweet deleted");
+			throw new BadRequestException("Tweet deleted");
 		}
 		return tweet;
 	}
@@ -63,17 +66,17 @@ public class TweetServiceImpl implements TweetService {
 	public User getUserAndCheckCredentials(UserRequestDto userRequestDto) {
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(userRequestDto.getCredentialsDto().getUsername());
 		if (optionalUser.isEmpty()) {
-//			throw new NotFoundException("User not found");
+			throw new NotFoundException("User not found");
 		} 
 		User user = optionalUser.get();
 		
 		String userPassword = user.getCredentials().getPassword();
 		String userInRepoPassword = userRequestDto.getCredentialsDto().getPassword();
 		if (!userPassword.equals(userInRepoPassword)) {
-//			throw new NotAuthorizedException("Password does not match");
+			throw new NotAuthorizedException("Password does not match");
 		}
 		if (user.isDeleted()) {
-//			throw new BadRequestException("User deleted");
+			throw new BadRequestException("User deleted");
 		}
 		return user;
 	}

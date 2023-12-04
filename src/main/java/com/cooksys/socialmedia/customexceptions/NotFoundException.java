@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class NotFoundException /*extends RuntimeException*/ {
+public class NotFoundException extends RuntimeException {
 
 	/**
 	 * 

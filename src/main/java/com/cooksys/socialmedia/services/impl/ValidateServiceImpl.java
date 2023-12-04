@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class ValidateServiceImpl implements ValidateService {
 	
 	private final HashtagRepository hashtagRepository;
-//	private final HashtagMapper hashtagMapper;
 	
 	@Override
 	public boolean validateHashtagExists(String label) {

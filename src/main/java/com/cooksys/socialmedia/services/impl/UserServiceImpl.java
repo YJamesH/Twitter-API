@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.customexceptions.NotAuthorizedException;
+import com.cooksys.socialmedia.customexceptions.NotFoundException;
 import com.cooksys.socialmedia.dtos.CredentialsRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
@@ -75,7 +77,7 @@ public class UserServiceImpl implements UserService {
 		// check if credentials match a user in the database
 		User userToCheck = getUserWithUsername(credentialsRequestDto.getUsername());
 		if (!credentials.equals(userToCheck.getCredentials())) {
-//			throw new BadRequestException("Cannot unfollow yourself");
+			throw new BadRequestException("Cannot unfollow yourself");
 		}
 
 		// check if users are following each other
@@ -85,7 +87,7 @@ public class UserServiceImpl implements UserService {
 			userRepository.saveAndFlush(userToCheck);
 			userRepository.saveAndFlush(following);
 		} else {
-//			throw new BadRequestException("Not following user");
+			throw new BadRequestException("Not following user");
 		}
 	}
 	
@@ -97,78 +99,17 @@ public class UserServiceImpl implements UserService {
 		userRepository.saveAndFlush(user);
 		return userMapper.entityToDto(user);
 	}
-	
-	
-//	@Override
-//	public List<TweetResponseDto> getMentions(String username) {
-//		List<Tweet> allTweets = tweetRepository.findAll();
-//		ArrayList<TweetResponseDto> mentionedTweets = new ArrayList<TweetResponseDto>();
-//
-//		for (Tweet tweet : allTweets) {
-//			String currContent = tweet.getContent();
-//			if (currContent.contains("@" + username)) {
-//				mentionedTweets.add(tweetMapper.entityToDto(tweet));
-//			}
-//		}
-//
-//		return mentionedTweets;
-//	}
 
-//	@Override
-//	public void follow(CredentialsRequestDto credentialsRequestDto, String username) {
-//		List<User> users = userRepository.findAll();
-//		User myUser = new User();
-//		boolean myUserSet = false;
-//
-//		User userToFollow = new User();
-//		boolean userToFollowSet = false;
-//
-//		// Populates the myUser and userToFollow with correct values.
-//		for (User user : users) {
-//			if (credentialsRequestDto.getUsername().equals(user.getCredentials().getUsername())) {
-//				myUser = user;
-//				myUserSet = true;
-//			}
-//
-//			if (username.equals(user.getCredentials().getUsername())) {
-//				userToFollow = user;
-//				userToFollowSet = true;
-//			}
-//		}
-//
-//		// If either variable is not set, there are no usernames with the specified
-//		// value and will throw an exception.
-//		if (!myUserSet) {
-//			// throw some exception here
-//		}
-//
-//		if (!userToFollowSet) {
-//			// throw some exception here
-//		}
-//
-//		List<User> myUserCurrFollowing = myUser.getFollowing();
-//		List<User> userToFollowCurrFollowers = userToFollow.getFollowers();
-//
-//		myUserCurrFollowing.add(userToFollow);
-//		userToFollowCurrFollowers.add(myUser);
-//
-//		myUser.setFollowing(myUserCurrFollowing);
-//		userToFollow.setFollowers(userToFollowCurrFollowers);
-//
-//		userRepository.saveAndFlush(myUser);
-//		userRepository.saveAndFlush(userToFollow);
-//	}
-//
-
+	
+	// HELPER METHODS //
 	private User getUserWithUsername(String username) {
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
 		if (optionalUser.isEmpty()) {
-//			throw new NotFoundException("User not found");
+			throw new NotFoundException("User not found");
 		}
 		User user = optionalUser.get();
 		if (user.isDeleted()) {
-//			System.out.println("DELETED USER");
-//			throw new BadRequestException("User deleted");
+			throw new BadRequestException("User deleted");
 		}
 		return user;
 	}
@@ -176,14 +117,14 @@ public class UserServiceImpl implements UserService {
 	private User getUserAndCheckCredentials(String username, CredentialsRequestDto credentialsRequestDto) {
 		Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
 		if (optionalUser.isEmpty()) {
-//			throw new NotFoundException("User not found");
+			throw new NotFoundException("User not found");
 		}
 		User user = optionalUser.get();
 		if (!user.getCredentials().getPassword().equals(credentialsRequestDto.getPassword())) {
-//			throw new NotAuthorizedException("Password does not match");
+			throw new NotAuthorizedException("Password does not match");
 		}
 		if (user.isDeleted()) {
-//			throw new BadRequestException("User deleted");
+			throw new BadRequestException("User deleted");
 		}
 		return user;
 	}

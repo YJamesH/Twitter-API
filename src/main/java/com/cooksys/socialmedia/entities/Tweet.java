@@ -38,7 +38,8 @@ public class Tweet {
 
     private String content;
 
-    @ManyToMany(mappedBy="tweetMentions")
+    @ManyToMany
+    @JoinTable(name="user_mentions")
     private List<User> userMentions;
 
     // Users who have liked the tweet

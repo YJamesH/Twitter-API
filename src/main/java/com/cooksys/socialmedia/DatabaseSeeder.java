@@ -1,5 +1,6 @@
 package com.cooksys.socialmedia;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -203,7 +204,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         tweet5.setAuthor(user3);
         tweet5.setDeleted(false);
         // Set Content @PARAM String
-        tweet5.setContent("This is some content 5 tweet5");
+        tweet5.setContent("This is some content 5 @mario tweet5");
         tweet5.setUserMentions(Arrays.asList(user1, user2));
         tweet5.setInReplyTo(tweet4);
         tweetRepository.saveAndFlush(tweet5);
@@ -222,7 +223,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         Tweet deletedTweet = new Tweet();
         deletedTweet.setAuthor(user3);
         deletedTweet.setDeleted(true);
-        // Set Content @PARAM String
+        // Set Content @PARAM String 
         deletedTweet.setContent("This is a deleted tweet (User3) tweet7");
         deletedTweet.setUserMentions(Arrays.asList(user1, user2));
         tweetRepository.saveAndFlush(deletedTweet);
@@ -242,17 +243,48 @@ public class DatabaseSeeder implements CommandLineRunner {
 
         // ----- List of Liked Tweets -----
         user1.setTweetLikes(user3Tweets);
+        for (Tweet tweet : user3Tweets) {
+        	List<User> userlikes = new ArrayList<>();
+        	userlikes.add(user1);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(user1);
+        tweetRepository.saveAllAndFlush(user3Tweets);
 
         user2.setTweetLikes(user1Tweets);
+        for (Tweet tweet : user1Tweets) {
+        	List<User> userlikes = new ArrayList<>();
+        	userlikes.add(user2);
+        	tweet.setUserLikes(userlikes);
+        }
         user2.setTweetLikes(user2Tweets);
+        for (Tweet tweet : user2Tweets) {
+        	List<User> userlikes = new ArrayList<>();
+        	userlikes.add(user2);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(user2);
+        tweetRepository.saveAllAndFlush(user1Tweets);
+        tweetRepository.saveAllAndFlush(user2Tweets);
+
 
         user3.setTweetLikes(user2Tweets);
+        for (Tweet tweet : user2Tweets) {
+        	List<User> userlikes = tweet.getUserLikes();
+        	userlikes.add(user3);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(user3);
-        
+        tweetRepository.saveAllAndFlush(user2Tweets);
+
         deletedUser.setTweetLikes(user2Tweets);
+        for (Tweet tweet : user2Tweets) {
+        	List<User> userlikes = tweet.getUserLikes();
+        	userlikes.add(deletedUser);
+        	tweet.setUserLikes(userlikes);
+        }
         userRepository.saveAndFlush(deletedUser);
+        tweetRepository.saveAllAndFlush(user2Tweets);
 
         // ----- List of Following -----
         List<User> followingList = List.of(user2, user3, user4);
@@ -268,7 +300,7 @@ public class DatabaseSeeder implements CommandLineRunner {
         mention1.setAuthor(user2);
         mention1.setDeleted(false);
         // Set Content @PARAM String
-        mention1.setContent("This is some content for tweet mention 1");
+        mention1.setContent("This is some content for tweet mention 1 @mario");
         tweetRepository.saveAndFlush(mention1);
 
         // Following

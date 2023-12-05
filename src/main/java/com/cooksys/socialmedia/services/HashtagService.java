@@ -10,5 +10,6 @@ public interface HashtagService {
 
 	List<HashtagResponseDto> getAllTags();
 
-    List<TweetResponseDto> getTweetsByLabel(String label);
+    List<TweetResponseDto> getTweetsByLabel(String label);    
+    
 }

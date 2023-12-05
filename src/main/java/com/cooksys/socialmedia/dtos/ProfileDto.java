@@ -1,4 +1,5 @@
 package com.cooksys.socialmedia.dtos;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class ProfileDto {
 	private String firstName;
 	private String lastName;
-	private String email; //req
+	private String email;
 	private String phone;
 }

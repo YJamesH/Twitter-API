@@ -5,11 +5,11 @@ import java.util.List;
 import com.cooksys.socialmedia.customException.NotAuthorizedException;
 import com.cooksys.socialmedia.customException.NotFoundException;
 import com.cooksys.socialmedia.customexceptions.BadRequestException;
+import com.cooksys.socialmedia.dtos.ContextDto;
 import com.cooksys.socialmedia.dtos.CredentialsDto;
 import com.cooksys.socialmedia.dtos.HashtagResponseDto;
 import com.cooksys.socialmedia.dtos.TweetRequestDto;
 import com.cooksys.socialmedia.dtos.TweetResponseDto;
-import com.cooksys.socialmedia.dtos.UserRequestDto;
 import com.cooksys.socialmedia.dtos.UserResponseDto;
 
 
@@ -23,7 +23,7 @@ public interface TweetService {
 
     TweetResponseDto deleteTweetById(Long id, CredentialsDto credentialsDto);
 
-    TweetResponseDto getTweetContextById(Long id);
+    ContextDto getTweetContextById(Long id);
 
 	TweetResponseDto postTweet(TweetRequestDto tweetRequestDto) throws NotAuthorizedException;
 
@@ -41,5 +41,5 @@ public interface TweetService {
 
 	List<TweetResponseDto> getReposts(Long id);
 
-	void likeTweet(Long id, UserRequestDto userRequestDto);
+	void likeTweet(Long id, CredentialsDto credentialsDto);
 }

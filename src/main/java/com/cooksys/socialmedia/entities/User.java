@@ -22,7 +22,6 @@ public class User {
     @GeneratedValue
     private Long id;
 
-
     @Column(nullable = false)
     @CreationTimestamp
     private Timestamp joined;

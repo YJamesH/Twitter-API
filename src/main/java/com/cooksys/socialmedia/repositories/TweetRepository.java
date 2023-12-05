@@ -7,5 +7,5 @@ import com.cooksys.socialmedia.entities.Tweet;
 
 @Repository
 public interface TweetRepository extends JpaRepository<Tweet, Long> {
-    // we can have derived qureis if required
+
 }

@@ -76,12 +76,19 @@ public class UserController {
 
 	@PostMapping("/@{username}/follow")
 	public void follow(@RequestBody CredentialsDto credentialsDto, @PathVariable(value = "username") String username) {
+		if (credentialsDto == null) { 
+			throw new BadRequestException("Credentials needed");
+		}
+		if (credentialsDto.getPassword() == null || credentialsDto.getUsername() == null) {
+			throw new BadRequestException("Username/Password needed");
+		}
+		System.out.println("GOT HERE 19");
 		userService.follow(credentialsDto, username);
 	}
 
 	//**************************
 	//***********	//GET users/@{username}/followers#104
-	@GetMapping("/{username}/followers")
+	@GetMapping("/@{username}/followers")
 	@ResponseStatus(HttpStatus.OK)
 	public List<UserResponseDto> getUsersWithActiveFollowers(@PathVariable(value = "username") String username) {
 		if (username == null) {
@@ -100,20 +107,24 @@ public class UserController {
 	//  profile: 'ProfileDto'
 	//}
 	//response 'User'
-	@PatchMapping("/{username}")
+	@PatchMapping("/@{username}")
 	@ResponseStatus(HttpStatus.OK)
-	public UserResponseDto updateUserProfile(@PathVariable("username") String username, @RequestBody CredentialsDto credentialsDto) {
-		if (username == null || credentialsDto == null) {
-			throw new BadRequestException( "Username or Credentials are null");
+	public UserResponseDto updateUserProfile(@PathVariable("username") String username, @RequestBody UserRequestDto userRequestDto) {
+		if (username == null || userRequestDto == null || userRequestDto.getProfile() == null || userRequestDto.getCredentials() == null) {
+			throw new BadRequestException( "Profile or Credentials is null");
+		} 
+		if (userRequestDto.getCredentials().getUsername() == null || userRequestDto.getCredentials().getPassword() == null) {
+			throw new BadRequestException( "Username or Password is null");
+
 		}
-		UserResponseDto userResponseDto = userService.updateUserProfile(username, credentialsDto);
+		UserResponseDto userResponseDto = userService.updateUserProfile(username, userRequestDto);
 		return userResponseDto;
 	}
 
 	//*************
 	//GET users/@{username}/feed#107
 	//Response ['Tweet']
-	@GetMapping("/{username}/feed")
+	@GetMapping("/@{username}/feed")
 	@ResponseStatus(HttpStatus.OK)
 	public List<TweetResponseDto> getTweetsByUsername(@PathVariable ("username") String username) {
 		if(username == null) {

@@ -10,10 +10,6 @@ import com.cooksys.socialmedia.entities.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
 
-
-    //List<User> findByFollowers(Long followers_id);
-    
 	Optional<User> findByCredentialsUsername(String username);
 
-//	User dtoToEntity(UserRequestDto userRequestDto);
 }

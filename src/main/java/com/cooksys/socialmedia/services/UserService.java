@@ -24,7 +24,7 @@ public interface UserService {
 
 	boolean getAvailableUsername(String username);
 
-	UserResponseDto updateUserProfile(String username, CredentialsDto credentialsDto);
+	UserResponseDto updateUserProfile(String username, UserRequestDto userRequestDto);
 
     List<TweetResponseDto> getTweetsByUsername(String username);
 	

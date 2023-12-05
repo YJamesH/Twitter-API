@@ -12,7 +12,5 @@ import com.cooksys.socialmedia.entities.Hashtag;
 public interface HashtagMapper {
 	List<HashtagResponseDto> entitiesToHashtagDtos(List<Hashtag> entities);
 	List<HashtagResponseDto> entitiesToResponseDtos (List<Hashtag> hashtags);
-//	Hashtag requestDtoToEntity(HashtagDto hashtagRequestDto);
-//	List<HashtagResponseDto> requestDtosToEntities(List<HashtagDto> hashtagRequestDtos);
 
 }

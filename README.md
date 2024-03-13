@@ -1,11 +1,36 @@
-Assessment 1
+# Twitter API
+
+## Purpose
+
+In this project, my group was tasked with implementing a RESTful API using Spring Boot, JPA, and Postgresql. Specifically, we implemented an API that allows for operations in common social media data similar to a Twitter Model. Our goal was to implement the 30 endpoints as detailed below with each group member reponsible for 10. We developed this project from scratch, starting with a database schema design and writing Spring services and controllers to handle requests. We were also given a Postman Test Suite to test each endpoint in depth and ensure all edge cases were covered.
+
+
+## Running the tests
+
+### Prerequisites
+```
+Eclipse: runs the Spring Boot Application as a Maven Project
+pgAdmin: manages the PostgreSQL database
+Postman: allows us to create and run test cases for our RESTful API 
+```
+
+### Testing
+```
+1. Clone the repository
+2. Import project into Eclipse
+3. Clean install Maven Build
+4. Run the main Spring Boot application in Eclipse (annotated with '@SpringBootApplication')
+5. Open pgAdmin and connect to database
+6. Open Postman
+7. Import the given Postman Test Suite, and run
+8. Create your own API calls in Postman to store/retrieve data!
+```
+
+Twitter API Project Specifications
 ===============================
 
 ## Overview
 
-For this assessment, you are tasked with implementing a RESTful API using Spring Boot, JPA, and Postgresql. Specifically, you will be implementing an API that exposes operations for social media data that resembles the conceptual model of Twitter.
-
-You will implement this API from scratch, working from a series of endpoint specifications (found at the end of this document) to develop a mental model of the data. You will develop a suitable database schema and write Spring services and controllers to handle requests, perform validation and business logic, and to transform data between the API and database models.
 
 ## Testing the API
 Included in this skeleton are 2 json files required to run the test suite for this final project. To run the tests you will need postman's newman CLI. To install newman run the command `npm install -g newman`. Once newman is installed you need to navigate to the folder containing the Assessment 1 Test Suite & Assessment 1 environment json files. Once there you can run the command `newman run "Assessment 1 Test Suite.postman_collection.json" -e "Assessment 1.postman_environment.json"`. When all tests are passing successfully you will pass 330 assertions and should see something similar to the following in your terminal:
@@ -522,3 +547,10 @@ Deleted users should be excluded from the response.
 ```javascript
 ['User']
 ```
+
+### Acknowledgements
+
+Group members: James Hwang, Devon Caron, Chandana Pamujula 
+
+
+
